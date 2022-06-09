@@ -34,7 +34,32 @@ namespace Milos_Djukic_PR_21_2018.Services
             return _context.Deliverers.ToList();
         }
 
-        public bool Register(UserRegisterDto userFromFront)
+        public UserRegisterDto GetUserById(Guid id)
+        {
+            var user = new UserRegisterDto();
+            var deliverer = new Deliverer();
+            var customer = new Customer();
+
+            deliverer = _context.Deliverers.Where(x => x.Id == id).FirstOrDefault();
+            customer = _context.Customers.Where(x => x.Id == id).FirstOrDefault();
+
+            if (deliverer != null)
+            {
+                user = _mapper.Map<UserRegisterDto>(deliverer);
+                return user;
+            }
+            else if(customer != null)
+            {
+                customer = _context.Customers.Where(x => x.Id == id).FirstOrDefault();
+                user = _mapper.Map<UserRegisterDto>(customer);
+                return user;
+            } else
+            {
+                return null;
+            }
+        }
+
+        public UserRegisterDto Register(UserRegisterDto userFromFront)
         {
             
 
@@ -45,14 +70,14 @@ namespace Milos_Djukic_PR_21_2018.Services
 
                 if(_context.Deliverers.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null)
                 {
-                    return false;
+                    return null;
                 } else
                 {
                     user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
                     _context.Deliverers.Add(user);
                     _context.SaveChanges();
 
-                    return true;
+                    return _mapper.Map<UserRegisterDto>(user);
                 }
 
 
@@ -64,7 +89,7 @@ namespace Milos_Djukic_PR_21_2018.Services
 
                 if (_context.Customers.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null)
                 {
-                    return false;
+                    return null;
                 }
                 else
                 {
@@ -72,7 +97,7 @@ namespace Milos_Djukic_PR_21_2018.Services
                     _context.Customers.Add(user);
                     _context.SaveChanges();
 
-                    return true;
+                    return _mapper.Map<UserRegisterDto>(user);
                 }
             }
         }
