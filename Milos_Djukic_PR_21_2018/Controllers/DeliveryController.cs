@@ -28,6 +28,15 @@ namespace Milos_Djukic_PR_21_2018
             return Ok(_service.GetUserById(id));
         }
 
+        [HttpPut("modify-profile/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult ModifyProfile([FromRoute]Guid id, [FromBody] UserRegisterDto user)
+        {
+            _service.ModifyUser(id, user);
+
+            return Ok();
+        }
+
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -35,7 +44,11 @@ namespace Milos_Djukic_PR_21_2018
         {
             if(_service.Login(user) != null)
             {
-                return Ok(_service.Login(user));
+                TokenModel token = new TokenModel();
+                
+                token.Value = _service.Login(user);
+                
+                return Ok(token);
 
             } else
             {
@@ -58,6 +71,8 @@ namespace Milos_Djukic_PR_21_2018
                 return BadRequest();
             }
         }
+
+       
 
 
 

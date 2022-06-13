@@ -18,6 +18,8 @@ export class LoginComponent implements OnInit {
     password : new FormControl()
   }) 
 
+  apiError = false;
+
   constructor(private api: ApiService, private toastr: ToastrService, private router: Router) { }
 
 
@@ -25,6 +27,9 @@ export class LoginComponent implements OnInit {
   }
 
   submitLogin(){
+
+    this.apiError = false;
+
     let model = new LoginModel();
 
     model.username = this.formGroupLogin.get('username')?.value;
@@ -33,10 +38,15 @@ export class LoginComponent implements OnInit {
 
     this.api.login(model).subscribe(
       data =>{
-          localStorage.setItem('token', data);
+          localStorage.setItem('token', data.value);
+          localStorage.setItem('isLoggedIn', 'true');
+
+          let decodedJWT = JSON.parse(window.atob(data.value.split('.')[1]));
+          localStorage.setItem('id', decodedJWT.id);
+
+          this.router.navigateByUrl('/dashboard');
       },
       error=>{
-        this.toastr.error("Wrong username or password!");
         this.router.navigateByUrl("/login");
       }
       

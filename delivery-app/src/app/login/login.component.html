@@ -9,7 +9,11 @@
                         <div class="mb-md-5 mt-md-4 pb-5">
 
                             <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
-                            <p class="text-white-50 mb-5">Please enter your login and password!</p>
+                            <p class="text-white-50 mb-5">Unesite username i lozinku!</p>
+                            <div *ngIf="apiError" class="alert alert-danger" role="alert">
+                                Pogresan username ili lozinka!
+                            </div>
+                            
                             <form [formGroup]="formGroupLogin">
                                 <div class="form-outline form-white mb-4">
                                     <input formControlName="username" type="text" id="typeEmailX"
@@ -20,7 +24,7 @@
                                 <div class="form-outline form-white mb-4">
                                     <input formControlName="password" type="password" id="typePasswordX"
                                         class="form-control form-control-lg" />
-                                    <label class="form-label" for="typePasswordX">Password</label>
+                                    <label class="form-label" for="typePasswordX">Lozinka</label>
                                 </div>
                             </form>
 
