@@ -11,16 +11,18 @@ import { ApiService } from './services/api-service';
 import { RegisterComponent } from './register/register.component';
 import { ToastrModule } from 'ngx-toastr';
 import { NoopAnimationPlayer } from '@angular/animations';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ProfileComponent } from './profile/profile.component';
+import { DashboardCustomerComponent } from './dashboard-customer/dashboard-customer.component';
+import { ArticleComponent } from './article/article.component';
+import { CurrentOrderComponent } from './current-order/current-order.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    DashboardComponent,
-    ProfileComponent
+    DashboardCustomerComponent,
+    ArticleComponent,
+    CurrentOrderComponent
   ],
   imports: [
     BrowserModule,

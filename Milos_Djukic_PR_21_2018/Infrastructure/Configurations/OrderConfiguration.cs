@@ -19,6 +19,8 @@ namespace Milos_Djukic_PR_21_2018.Infrastructure.Configurations
 
             builder.HasOne(x => x.Deliverer).WithMany(x => x.Orders).HasForeignKey(x => x.DelivererId);
 
+            
+
 
         }
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Milos_Djukic_PR_21_2018.Configurations;
 
 namespace Milos_Djukic_PR_21_2018.Migrations
 {
     [DbContext(typeof(DeliveryDbContext))]
-    partial class DeliveryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220613151142_izmena")]
+    partial class izmena
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,10 +68,15 @@ namespace Milos_Djukic_PR_21_2018.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Articles");
                 });
@@ -153,9 +160,6 @@ namespace Milos_Djukic_PR_21_2018.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Accepted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
@@ -165,14 +169,14 @@ namespace Milos_Djukic_PR_21_2018.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Delivered")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("DelivererId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Price")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -183,19 +187,11 @@ namespace Milos_Djukic_PR_21_2018.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Milos_Djukic_PR_21_2018.Models.OrderArticle", b =>
+            modelBuilder.Entity("Milos_Djukic_PR_21_2018.Models.Article", b =>
                 {
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ArticleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("OrderId", "ArticleId");
-
-                    b.HasIndex("ArticleId");
-
-                    b.ToTable("OrderArticles");
+                    b.HasOne("Milos_Djukic_PR_21_2018.Models.Order", null)
+                        .WithMany("Articles")
+                        .HasForeignKey("OrderId");
                 });
 
             modelBuilder.Entity("Milos_Djukic_PR_21_2018.Models.Order", b =>
@@ -217,30 +213,6 @@ namespace Milos_Djukic_PR_21_2018.Migrations
                     b.Navigation("Deliverer");
                 });
 
-            modelBuilder.Entity("Milos_Djukic_PR_21_2018.Models.OrderArticle", b =>
-                {
-                    b.HasOne("Milos_Djukic_PR_21_2018.Models.Article", "Article")
-                        .WithMany("OrderArticles")
-                        .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Milos_Djukic_PR_21_2018.Models.Order", "Order")
-                        .WithMany("OrderArticles")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Article");
-
-                    b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("Milos_Djukic_PR_21_2018.Models.Article", b =>
-                {
-                    b.Navigation("OrderArticles");
-                });
-
             modelBuilder.Entity("Milos_Djukic_PR_21_2018.Models.Customer", b =>
                 {
                     b.Navigation("Orders");
@@ -253,7 +225,7 @@ namespace Milos_Djukic_PR_21_2018.Migrations
 
             modelBuilder.Entity("Milos_Djukic_PR_21_2018.Models.Order", b =>
                 {
-                    b.Navigation("OrderArticles");
+                    b.Navigation("Articles");
                 });
 #pragma warning restore 612, 618
         }

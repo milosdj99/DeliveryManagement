@@ -44,6 +44,9 @@ export class LoginComponent implements OnInit {
           let decodedJWT = JSON.parse(window.atob(data.value.split('.')[1]));
           localStorage.setItem('id', decodedJWT.id);
 
+          console.log(data.value);
+          console.log(decodedJWT.id)
+
           this.router.navigateByUrl('/dashboard');
       },
       error=>{

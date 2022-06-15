@@ -16,6 +16,8 @@ namespace Milos_Djukic_PR_21_2018.Mapping
             CreateMap<UserRegisterDto, Admin>().ReverseMap(); //Kazemo mu da mapira Subject na SubjectDto i obrnuto
             CreateMap<UserRegisterDto, Deliverer>().ReverseMap();
             CreateMap<UserRegisterDto, Customer>().ReverseMap();
+            CreateMap<ArticleDTO, Article>().ReverseMap();
+            CreateMap<OrderDto, Order>().ReverseMap();
         }
           
             

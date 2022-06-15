@@ -48,7 +48,7 @@ export class RegisterComponent implements OnInit {
       if(this.isLoggedIn){
 
 
-        this.api.getUserById(localStorage.getItem('id')!).subscribe(
+        this.api.getUserById().subscribe(
           data =>{
             this.formGroupRegister.get('username')?.patchValue(data.username);
             this.formGroupRegister.get('email')?.patchValue(data.email);

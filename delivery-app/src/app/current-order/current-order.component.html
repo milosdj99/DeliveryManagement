@@ -1,0 +1,25 @@
+
+<div class="card">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Adresa</th>
+            <th scope="col">Komentar</th>
+            <th scope="col">Vreme</th>
+            <th scope="col">Prihvacena</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{order.address}}</td>
+            <td>{{order.comment}}</td>
+            <td>{{order.time}}</td>
+            <td>{{order.accepted == true ? "Da" : "Ne"}}</td>
+          </tr>
+          <ul *ngFor="let a of order.articles">
+              <li><b>{{a.name}} : {{a.price}} DIN</b></li>
+          </ul>
+          
+        </tbody>
+      </table>
+</div>

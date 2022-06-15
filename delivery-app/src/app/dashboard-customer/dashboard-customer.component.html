@@ -1,0 +1,42 @@
+
+
+<div class="card" style="float: right;" >
+  <div class="card-body">
+    <h5 class="card-title justify-content-center" >KORPA</h5>
+    <div class="card" *ngFor="let article of basket">
+      <div class="card-body">
+        <ul>
+          <li>{{article.name}} x{{article.amount}}: {{article.price*article.amount}} <button (click) = "removeArticle(article)">Obrisi</button></li>
+        </ul>
+        
+      </div>
+      
+    </div>
+    <form [formGroup]="formGroupOrder">
+      <div class="form-outline form-white mb-4">
+          <input formControlName="address" type="text" id="typeAddressX"
+              class="form-control form-control-lg" />
+          <label class="form-label" for="typeAddressX">Adresa</label>
+      </div>
+    
+      <div class="form-outline form-white mb-4">
+          <input formControlName="comment" type="text" id="typeCommentX"
+              class="form-control form-control-lg" />
+          <label class="form-label" for="typeCommentX">Komentar</label>
+      </div>
+      
+      <button class="btn btn-lg px-5"  type="submit" [disabled]="basket.length==0 || !formGroupOrder.get('address')?.value"
+      (click)="submitOrder()">Naruči</button>
+      
+    </form>
+  </div>
+
+</div>
+
+<div class="row">
+  <div style="width: 20rem; height: 20rem;"  class="col-md-2 gx-5" *ngFor="let art of articles" >   
+    <app-article (addEvent)="addArticle($event)" [article]="art" ></app-article>
+  </div>
+</div>
+
+

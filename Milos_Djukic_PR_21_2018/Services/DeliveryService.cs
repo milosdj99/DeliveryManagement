@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Milos_Djukic_PR_21_2018.Configurations;
@@ -139,46 +140,107 @@ namespace Milos_Djukic_PR_21_2018.Services
             }
         }
 
-        public UserRegisterDto Register(UserRegisterDto userFromFront)
+
+        public List<ArticleDTO> GetAllArticles()
         {
+            var articles = _context.Articles.ToList();
+
             
 
-            if(userFromFront.Type == "Deliverer")
+            var articlesDtos = new List<ArticleDTO>();
+
+            foreach (Article a in articles)
+            {
+                ArticleDTO adto = _mapper.Map<ArticleDTO>(a);
+                articlesDtos.Add(adto);
+            }
+
+            return articlesDtos; 
+        }
+
+        public void AddArticle(ArticleDTO article)
+        {
+            Article newArticle = _mapper.Map<Article>(article);
+
+            _context.Articles.Add(newArticle);
+            _context.SaveChanges();
+        }
+
+        public void AddOrder(OrderDto order, Guid id)
+        {
+            Order newOrder = _mapper.Map<Order>(order);
+
+            newOrder.Accepted = false;
+
+            newOrder.Customer = _context.Customers.Where(x => x.Id == id).FirstOrDefault();
+
+            newOrder.Deliverer = _context.Deliverers.Where(x => x.Id == new Guid("42E752EB-FAFE-40CF-26B1-08DA386D1DF1")).FirstOrDefault();
+
+            newOrder.OrderArticles = new List<OrderArticle>();
+
+            foreach(ArticleDTO a in order.Articles)
+            {
+                Article arr = _context.Articles.Where(x => x.Id == a.Id).FirstOrDefault();
+
+                
+                newOrder.OrderArticles.Add(new OrderArticle() { Article = arr, ArticleId = arr.Id, Order = newOrder });
+            } 
+
+            
+
+            _context.Orders.Add(newOrder);
+
+            _context.SaveChanges();
+        }
+
+        public OrderDto GetCurrentOrder(Guid id)
+        {
+            var order =  _context.Orders.Include(x => x.OrderArticles).Where(x => x.CustomerId == id && x.Accepted == true).FirstOrDefault();
+
+            if(order == null)
+            {
+                return null;
+            }
+
+            var orderDto = _mapper.Map<OrderDto>(order);
+
+            orderDto.Articles = new List<ArticleDTO>();
+
+            foreach(OrderArticle oa in order.OrderArticles)
+            {
+                orderDto.Articles.Add(_mapper.Map<ArticleDTO>(oa.Article));
+            }
+
+            return orderDto; 
+        }
+
+
+        public UserRegisterDto Register(UserRegisterDto userFromFront)
+        {
+            if (_context.Deliverers.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null || _context.Customers.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null)
+            {
+                return null;
+            }
+
+            if (userFromFront.Type == "Deliverer")
             {
                 Deliverer user = _mapper.Map<Deliverer>(userFromFront);
 
+                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                 _context.Deliverers.Add(user);
+                 _context.SaveChanges();
 
-                if(_context.Deliverers.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null)
-                {
-                    return null;
-                } else
-                {
-                    user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                    _context.Deliverers.Add(user);
-                    _context.SaveChanges();
-
-                    return _mapper.Map<UserRegisterDto>(user);
-                }
-
-
-
+                 return _mapper.Map<UserRegisterDto>(user);
+                
             } else
             {
                 Customer user = _mapper.Map<Customer>(userFromFront);
 
+                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                 _context.Customers.Add(user);
+                 _context.SaveChanges();
 
-                if (_context.Customers.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null)
-                {
-                    return null;
-                }
-                else
-                {
-                    user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                    _context.Customers.Add(user);
-                    _context.SaveChanges();
-
-                    return _mapper.Map<UserRegisterDto>(user);
-                }
+                 return _mapper.Map<UserRegisterDto>(user);              
             }
         }
 

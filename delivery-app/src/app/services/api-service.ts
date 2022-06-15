@@ -4,6 +4,8 @@ import { environment } from "src/environments/environment";
 import { RegisterModel } from "../models/DTO/register-model";
 import { LoginModel } from "../models/DTO/login-model";
 import { TokenModel } from "../models/token-model";
+import { Article } from "../models/article-model";
+import { Order } from "../models/DTO/order-model";
 
 
 @Injectable({ providedIn: 'root' })
@@ -11,8 +13,14 @@ export class ApiService{
 
     baseUrl = `${environment.apiUrl}`;
 
+    
+
     constructor(private http: HttpClient){
 
+    }
+
+    get id(){
+        return localStorage.getItem('id');
     }
 
     register(registerModel: RegisterModel){
@@ -23,14 +31,25 @@ export class ApiService{
         return this.http.post<TokenModel>(`${this.baseUrl}/login`, model);
     }
 
-    getUserById(id: string){
-        return this.http.get<RegisterModel>(`${this.baseUrl}/users/${id}`);
+    getUserById(){
+        return this.http.get<RegisterModel>(`${this.baseUrl}/users/${this.id}`);
     }
 
     changeProfile(registerModel: RegisterModel){
 
-        let id = localStorage.getItem('id');
-        return this.http.put<RegisterModel>(`${this.baseUrl}/modify-profile/${id}`, registerModel);
+        return this.http.put<RegisterModel>(`${this.baseUrl}/modify-profile/${this.id}`, registerModel);
+    }
+
+    getArticles(){
+        return this.http.get<Array<Article>>(`${this.baseUrl}/articles`);
+    }
+
+    addOrder(order: Order){
+        return this.http.post(`${this.baseUrl}/add-order/${this.id}`, order);
+    }
+
+    getCurrentOrder(){
+        return this.http.get<Order>(`${this.baseUrl}/current-order/${this.id}`)
     }
 
     

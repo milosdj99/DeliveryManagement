@@ -1,0 +1,16 @@
+<div style="height: 30rem; background-color:black;" class="card" >
+    <div class="card-body">
+      <h5 class="card" style="background-color: white; text-align: center;">{{article.name}}</h5>
+      <p class="card" style="background-color: white; text-align: center;"><b>{{article.price}} DIN</b></p>
+    </div>
+    <ul *ngFor="let ing of ingredients" class="list-group list-group-flush">
+      <li type="bullet" class="card gx-5">{{ing}}</li>
+    </ul>
+    <div class="card">
+        <label>Količina:</label>
+        <input type="number" value="1" min="1" #amount>
+    </div>
+    <div class="card">
+      <button (click) = "addArticle(amount.value)">Dodaj</button>
+    </div>
+  </div>

@@ -19,8 +19,9 @@ namespace Milos_Djukic_PR_21_2018.Configurations
         public DbSet<Deliverer> Deliverers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Article> Articles { get; set; }
+        public DbSet<OrderArticle> OrderArticles { get; set; }
 
-        
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +30,9 @@ namespace Milos_Djukic_PR_21_2018.Configurations
             modelBuilder.ApplyConfiguration(new CustomerConfiguration());
             modelBuilder.ApplyConfiguration(new DelivererConfiguration());
             modelBuilder.ApplyConfiguration(new OrderConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderArticleConfiguration());
         }
+
+            
     }
 }
