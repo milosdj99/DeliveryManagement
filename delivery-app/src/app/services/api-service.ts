@@ -48,8 +48,28 @@ export class ApiService{
         return this.http.post(`${this.baseUrl}/add-order/${this.id}`, order);
     }
 
-    getCurrentOrder(){
-        return this.http.get<Order>(`${this.baseUrl}/current-order/${this.id}`)
+    getCurrentOrderCustomer(){
+        return this.http.get<Order>(`${this.baseUrl}customer/current-order/${this.id}`)
+    }
+
+    getCustomerOrders(){
+        return this.http.get<Array<Order>>(`${this.baseUrl}/customer/previous-orders/${this.id}`);
+    }
+
+    getNewOrders(){
+        return this.http.get<Array<Order>>(`${this.baseUrl}/deliverer/new-orders/${this.id}`);
+    }
+
+    getDelivererOrders(){
+        return this.http.get<Array<Order>>(`${this.baseUrl}/deliverer/previous-orders/${this.id}`);
+    }
+
+    getCurrentOrderDeliverer(){
+        return this.http.get<Order>(`${this.baseUrl}/deliverer/current-order/${this.id}`);
+    }
+
+    confirmOrder(orderId: string){
+        return this.http.get(`${this.baseUrl}/deliverer/confirm-order/${this.id}/${orderId}`);
     }
 
     

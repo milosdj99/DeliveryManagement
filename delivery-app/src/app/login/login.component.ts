@@ -43,11 +43,21 @@ export class LoginComponent implements OnInit {
 
           let decodedJWT = JSON.parse(window.atob(data.value.split('.')[1]));
           localStorage.setItem('id', decodedJWT.id);
+          localStorage.setItem('role', decodedJWT.role);
 
-          console.log(data.value);
-          console.log(decodedJWT.id)
+          if(localStorage.getItem('role') == 'customer'){
 
-          this.router.navigateByUrl('/dashboard');
+              this.router.navigateByUrl('/dashboard/customer');
+
+          }else if(localStorage.getItem('role') == 'deliverer'){
+
+              this.router.navigateByUrl('/dashboard/deliverer');
+
+          } else {
+            //TO DO: admin
+          }
+
+          
       },
       error=>{
         this.router.navigateByUrl("/login");

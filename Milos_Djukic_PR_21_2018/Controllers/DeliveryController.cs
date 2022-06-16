@@ -25,13 +25,13 @@ namespace Milos_Djukic_PR_21_2018
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult GetUserById([FromRoute] Guid id)
         {
-            
+
             return Ok(_service.GetUserById(id));
         }
 
         [HttpPut("modify-profile/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult ModifyProfile([FromRoute]Guid id, [FromBody] UserRegisterDto user)
+        public IActionResult ModifyProfile([FromRoute] Guid id, [FromBody] UserRegisterDto user)
         {
             _service.ModifyUser(id, user);
 
@@ -47,28 +47,67 @@ namespace Milos_Djukic_PR_21_2018
 
         [HttpPost("add-order/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult AddOrder([FromBody] OrderDto order, [FromRoute]Guid id)
+        public IActionResult AddOrder([FromBody] OrderDto order, [FromRoute] Guid id)
         {
             _service.AddOrder(order, id);
 
             return Ok();
         }
 
-        [HttpGet("current-order/{id}")]
+        [HttpGet("customer/current-order/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetCurrentOrder([FromRoute] Guid id)
+        public IActionResult GetCurrentOrderCustomer([FromRoute] Guid id)
         {
-            if(_service.GetCurrentOrder(id) != null)
+            if (_service.GetCurrentOrderCustomer(id) != null)
             {
-                return Ok(_service.GetCurrentOrder(id));
+                return Ok(_service.GetCurrentOrderCustomer(id));
             } else
             {
                 return NotFound();
             }
         }
 
-        
+        [HttpGet("customer/previous-orders/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult CustomerOrders([FromRoute] Guid id)
+        {
+            return Ok(_service.GetCustomerOrders(id));
+        }
+
+        [HttpGet("deliverer/new-orders/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetNewOrders(Guid id)
+        {
+            return Ok(_service.GetNewOrdersDeliverer(id));
+        }
+
+
+        [HttpGet("deliverer/previous-orders/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetDelivererOrders(Guid id)
+        {
+            return Ok(_service.GetDelivererOrders(id));
+        }
+
+        [HttpGet("deliverer/current-order/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetCurrentOrderDeliverer(Guid id)
+        {
+            return Ok(_service.GetCurrentOrderDeliverer(id));
+        }
+
+        [HttpPost("deliverer/confirm-order/{id}/{orderId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult ConfirmOrder(Guid id, Guid orderId)
+        {
+            _service.ConfirmOrder(id, orderId);
+
+            return Ok();
+        }
+
+
+
 
 
 

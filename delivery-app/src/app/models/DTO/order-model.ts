@@ -2,6 +2,7 @@ import { Article } from "../article-model";
 
 export class Order{
         
+    id: string="";
     address : string ="";
     comment : string = "";
     price : number = 0;

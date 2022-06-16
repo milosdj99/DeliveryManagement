@@ -183,7 +183,7 @@ namespace Milos_Djukic_PR_21_2018.Services
                 Article arr = _context.Articles.Where(x => x.Id == a.Id).FirstOrDefault();
 
                 
-                newOrder.OrderArticles.Add(new OrderArticle() { Article = arr, ArticleId = arr.Id, Order = newOrder });
+                newOrder.OrderArticles.Add(new OrderArticle() { Article = arr, Order = newOrder });
             } 
 
             
@@ -193,9 +193,9 @@ namespace Milos_Djukic_PR_21_2018.Services
             _context.SaveChanges();
         }
 
-        public OrderDto GetCurrentOrder(Guid id)
+        public OrderDto GetCurrentOrderCustomer(Guid id)
         {
-            var order =  _context.Orders.Include(x => x.OrderArticles).Where(x => x.CustomerId == id && x.Accepted == true).FirstOrDefault();
+            var order =  _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.CustomerId == id && x.Accepted == true).FirstOrDefault();
 
             if(order == null)
             {
@@ -213,6 +213,66 @@ namespace Milos_Djukic_PR_21_2018.Services
 
             return orderDto; 
         }
+
+        public List<OrderDto> GetCustomerOrders(Guid id)
+        {
+            var orders = _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.CustomerId == id && x.Time < DateTime.Now).ToList();
+
+            return OrderListToDtos(orders);
+        }
+
+        public List<OrderDto> GetNewOrdersDeliverer(Guid id)
+        {
+            var orders = _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.Accepted == false).ToList();
+
+            return OrderListToDtos(orders);
+        }
+
+        public List<OrderDto> GetDelivererOrders(Guid id)
+        {
+            var orders = _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.DelivererId == id && x.Time < DateTime.Now).ToList();
+
+            return OrderListToDtos(orders);
+        }
+
+        public OrderDto GetCurrentOrderDeliverer(Guid id)
+        {
+            var order = _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.DelivererId == id && x.Accepted == true).FirstOrDefault();
+
+            if (order == null)
+            {
+                return null;
+            }
+
+            var orderDto = _mapper.Map<OrderDto>(order);
+
+            orderDto.Articles = new List<ArticleDTO>();
+
+            foreach (OrderArticle oa in order.OrderArticles)
+            {
+                orderDto.Articles.Add(_mapper.Map<ArticleDTO>(oa.Article));
+            }
+
+            return orderDto;
+        }
+
+        public void ConfirmOrder(Guid id, Guid orderId)
+        {
+            Deliverer user = _context.Deliverers.Where(x => x.Id == id).FirstOrDefault();
+
+            _context.Orders.Where(x => x.Id == id).FirstOrDefault().Deliverer = user;
+
+            _context.Orders.Where(x => x.Id == id).FirstOrDefault().Accepted = true;
+
+            Random r = new Random();
+
+            _context.Orders.Where(x => x.Id == id).FirstOrDefault().Time.AddMinutes(r.Next(1, 3));
+
+            _context.SaveChanges();
+        }
+
+
+        
 
 
         public UserRegisterDto Register(UserRegisterDto userFromFront)
@@ -289,14 +349,17 @@ namespace Milos_Djukic_PR_21_2018.Services
 
                 if (type == 1) {
                     claims.Add(new Claim(ClaimTypes.Role, "admin"));
+                    claims.Add(new Claim("role", "admin"));
                     claims.Add(new Claim("id", AdminFromDatabase.Id.ToString()));
                 }
                 if (type == 2) {
                     claims.Add(new Claim(ClaimTypes.Role, "deliverer"));
+                    claims.Add(new Claim("role", "deliverer"));
                     claims.Add(new Claim("id", DelivererFromDatabase.Id.ToString()));
                 }
                 if (type == 3) {
                     claims.Add(new Claim(ClaimTypes.Role, "customer"));
+                    claims.Add(new Claim("role", "customer"));
                     claims.Add(new Claim("id", CustomerFromDatabase.Id.ToString()));
                 }
 
@@ -318,6 +381,30 @@ namespace Milos_Djukic_PR_21_2018.Services
             {
                 return null;
             }
+
+            
+        }
+
+        private List<OrderDto> OrderListToDtos(List<Order> list)
+        {
+            List<OrderDto> orderDtos = new List<OrderDto>();
+
+            foreach (Order o in list)
+            {
+                OrderDto odto = _mapper.Map<OrderDto>(o);
+
+                odto.Articles = new List<ArticleDTO>();
+
+                foreach (OrderArticle a in o.OrderArticles)
+                {
+
+                    odto.Articles.Add(_mapper.Map<ArticleDTO>(a.Article));
+                }
+
+                orderDtos.Add(odto);
+            }
+
+            return orderDtos;
         }
     }
 }

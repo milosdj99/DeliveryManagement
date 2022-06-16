@@ -23,9 +23,18 @@ export class DashboardCustomerComponent implements OnInit {
 
   basket: Article[] = [];
 
+  orders: Order[] = [];
+
+  showBasket : boolean = false;
+
   constructor(private api: ApiService) { }
 
   ngOnInit(): void {
+
+    this.showBasket = true;
+
+    this.orders = [];
+
     this.api.getArticles().subscribe(
       data => {
         this.articles = data;
@@ -91,6 +100,38 @@ export class DashboardCustomerComponent implements OnInit {
 
   removeArticle(article: Article){
     this.basket.splice(this.basket.indexOf(article), 1);
+  }
+
+  myOrders(){
+
+    this.orders = [];
+    this.articles = [];
+    
+      this.api.getCustomerOrders().subscribe(
+        data => {
+          this.orders = data;
+        }
+      );
+  }
+
+  currentOrder(){
+
+    this.orders = [];
+
+    this.showBasket = false;
+
+    this.articles = [];
+
+    this.api.getCurrentOrderCustomer().subscribe(
+      data => {
+            this.orders.push(data);
+        }
+      )
+  }
+
+  logOut(){
+    localStorage.setItem("isLoggedIn", "false");
+    localStorage.removeItem('token');
   }
 
 }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CurrentOrderComponent } from './current-order/current-order.component';
 import { DashboardCustomerComponent } from './dashboard-customer/dashboard-customer.component';
+import { DashboardDelivererComponent } from './dashboard-deliverer/dashboard-deliverer.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 
@@ -9,8 +9,8 @@ const routes: Routes = [
   {path:'', redirectTo:'login', pathMatch:'full'},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'dashboard', component: DashboardCustomerComponent},
-  {path: 'current-order', component: CurrentOrderComponent}
+  {path: 'dashboard/customer', component: DashboardCustomerComponent},
+  {path: 'dashboard/deliverer', component: DashboardDelivererComponent}
 ];
 
 @NgModule({

@@ -13,7 +13,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { NoopAnimationPlayer } from '@angular/animations';
 import { DashboardCustomerComponent } from './dashboard-customer/dashboard-customer.component';
 import { ArticleComponent } from './article/article.component';
-import { CurrentOrderComponent } from './current-order/current-order.component';
+import { OrderComponent } from './order-component/order.component';
+import { DashboardDelivererComponent } from './dashboard-deliverer/dashboard-deliverer.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { CurrentOrderComponent } from './current-order/current-order.component';
     RegisterComponent,
     DashboardCustomerComponent,
     ArticleComponent,
-    CurrentOrderComponent
+    OrderComponent,
+    DashboardDelivererComponent
   ],
   imports: [
     BrowserModule,

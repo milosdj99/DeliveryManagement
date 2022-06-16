@@ -1,6 +1,29 @@
 
+<div style="width: 50px">
+  <button (click)="logOut()"></button>
+</div>
 
-<div class="card" style="float: right;" >
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+  <div class="container-fluid">
+    
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        
+        <li style="background-color: aquamarine;"  class="nav-item">
+          <a class="nav-link" aria-current="page" href="/register">Profil</a>
+        </li>
+        <li style="background-color: aquamarine;" class="nav-item">
+          <button class="nav-link" (click)="currentOrder()">Trenutna porudzbina</button>
+        </li>
+        <li style="background-color: aquamarine;" class="nav-item">
+          <button class="nav-link" (click)="myOrders()">Prethodne porudzbine</button>
+        </li>
+      </ul>      
+    </div>
+  </div>
+</nav>
+
+<div *ngIf="showBasket" class="card" style="float: right;" >
   <div class="card-body">
     <h5 class="card-title justify-content-center" >KORPA</h5>
     <div class="card" *ngFor="let article of basket">
@@ -38,5 +61,7 @@
     <app-article (addEvent)="addArticle($event)" [article]="art" ></app-article>
   </div>
 </div>
+
+<app-order-component *ngFor="let o of orders" [order] = 'o'></app-order-component>
 
 

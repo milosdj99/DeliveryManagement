@@ -8,6 +8,7 @@ namespace Milos_Djukic_PR_21_2018.DTO
 {
     public class OrderDto
     {
+        public string Id { get; set; }
         public List<ArticleDTO> Articles { get; set; }
         public Guid CustomerId { get; set; }
         public string Address { get; set; }
