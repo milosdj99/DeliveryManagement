@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Article } from '../models/article-model';
 import { Order } from '../models/DTO/order-model';
 import { ApiService } from '../services/api-service';
@@ -19,6 +20,8 @@ export class DashboardCustomerComponent implements OnInit {
     comment: new FormControl
   })
 
+  apiError : boolean = false;
+
   articles: Article[] = [];
 
   basket: Article[] = [];
@@ -27,13 +30,21 @@ export class DashboardCustomerComponent implements OnInit {
 
   showBasket : boolean = false;
 
-  constructor(private api: ApiService) { }
+  showTimer: boolean = false;
+
+  deliveryMinutes: number = 0;
+
+  deliverySeconds: number = 0;
+
+  constructor(private api: ApiService, private router: Router) { }
 
   ngOnInit(): void {
 
     this.showBasket = true;
 
     this.orders = [];
+
+    this.apiError = false;
 
     this.api.getArticles().subscribe(
       data => {
@@ -57,7 +68,7 @@ export class DashboardCustomerComponent implements OnInit {
       }
     });
 
-    
+    order.id = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
     order.address = this.formGroupOrder.get('address')?.value;
     order.comment = this.formGroupOrder.get('comment')?.value;
     order.price = price;
@@ -65,7 +76,14 @@ export class DashboardCustomerComponent implements OnInit {
     order.time = new Date();
     
     
-    this.api.addOrder(order).subscribe();
+    this.api.addOrder(order).subscribe(
+      error => {
+        this.apiError = true;
+      },
+      data => {
+        this.apiError = false;
+      }
+    );
 
   }
 
@@ -104,6 +122,9 @@ export class DashboardCustomerComponent implements OnInit {
 
   myOrders(){
 
+    this.showTimer = false;
+    this.apiError = false;
+
     this.orders = [];
     this.articles = [];
     
@@ -116,6 +137,10 @@ export class DashboardCustomerComponent implements OnInit {
 
   currentOrder(){
 
+    this.showTimer = false;
+
+    this.apiError = false;
+
     this.orders = [];
 
     this.showBasket = false;
@@ -124,14 +149,49 @@ export class DashboardCustomerComponent implements OnInit {
 
     this.api.getCurrentOrderCustomer().subscribe(
       data => {
+            let order : Order = data;
+            let currentTime = new Date();
+            
+            order.time = new Date(order.time);
+
+            
+            let helperForSeconds = 0;
+
+            if(order.time.getSeconds < currentTime.getSeconds){
+              helperForSeconds = order.time.getSeconds() + 60;
+            }
+            this.deliveryMinutes = order.time.getMinutes() - currentTime.getMinutes();
+            this.deliverySeconds = order.time.getSeconds() + helperForSeconds - currentTime.getSeconds();
+
             this.orders.push(data);
+
+            if(order.accepted == true){
+              this.showTimer = true;
+            }
         }
       )
+  }
+
+  newOrder(){
+
+    this.apiError = false;
+
+    this.showBasket = true;
+
+    this.orders = [];
+
+    this.api.getArticles().subscribe(
+      data => {
+        this.articles = data;
+      }
+    )
   }
 
   logOut(){
     localStorage.setItem("isLoggedIn", "false");
     localStorage.removeItem('token');
+
+    this.router.navigateByUrl("/login");
   }
 
 }

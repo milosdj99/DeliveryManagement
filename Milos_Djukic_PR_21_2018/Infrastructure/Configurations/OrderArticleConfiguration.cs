@@ -15,7 +15,7 @@ namespace Milos_Djukic_PR_21_2018.Infrastructure.Configurations
 
             public void Configure(EntityTypeBuilder<OrderArticle> builder)
             {
-                builder.HasKey(sc => new { sc.OrderId, sc.ArticleId });
+                builder.HasKey(sc => sc.Id);
 
                 builder.HasOne<Article>(sc => sc.Article)
                 .WithMany(s => s.OrderArticles)

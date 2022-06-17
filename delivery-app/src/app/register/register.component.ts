@@ -113,17 +113,26 @@ export class RegisterComponent implements OnInit {
       model.type = this.formGroupRegister.get('type')?.value;
       model.password = this.formGroupRegister.get('password1')?.value;
          
-      if(this.isLoggedIn){
+      if(!this.isLoggedIn){
           this.api.register(model).subscribe(
+            data => {
+                this.router.navigateByUrl("/login");
+            },
             error => {
                 this.apiError = true;
-                this.router.navigateByUrl("/register");
             }
           );
 
-          this.router.navigateByUrl("/login");
+          
       } else {
-          this.api.changeProfile(model);
+          this.api.changeProfile(model).subscribe(
+            data => {
+              this.router.navigateByUrl("/login");
+          },
+            error => {
+              this.apiError = true;
+            }
+          );
       }
     }
 

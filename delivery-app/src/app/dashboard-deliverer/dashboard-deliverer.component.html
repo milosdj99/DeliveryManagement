@@ -12,7 +12,7 @@
             <a class="nav-link" aria-current="page" href="/register">Profil</a>
           </li>
           <li style="background-color: aquamarine;" class="nav-item">
-            <button href="/dashboard/deliverer" class="nav-link" >Nove porudzbine</button>
+            <button (click)="newOrdersRedirect()" class="nav-link" >Nove porudzbine</button>
           </li>
           <li style="background-color: aquamarine;" class="nav-item">
             <button (click)="previousOrders()" class="nav-link" >Prethodne porudzbine</button>
@@ -24,6 +24,10 @@
       </div>
     </div>
   </nav>
+
+  <div *ngIf="apiError == true" class="alert alert-danger" role="alert">
+    Vec imate dostavu u toku!
+</div>
 
   <ul>
       <li *ngFor="let o of orders">

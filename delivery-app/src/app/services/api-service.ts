@@ -49,7 +49,7 @@ export class ApiService{
     }
 
     getCurrentOrderCustomer(){
-        return this.http.get<Order>(`${this.baseUrl}customer/current-order/${this.id}`)
+        return this.http.get<Order>(`${this.baseUrl}/customer/current-order/${this.id}`)
     }
 
     getCustomerOrders(){
@@ -70,6 +70,22 @@ export class ApiService{
 
     confirmOrder(orderId: string){
         return this.http.get(`${this.baseUrl}/deliverer/confirm-order/${this.id}/${orderId}`);
+    }
+
+    getAllDeliveres(){
+        return this.http.get<Array<RegisterModel>>(`${this.baseUrl}/admin/all-deliverers`);
+    }
+
+    addArticle(article: Article){
+        return this.http.post(`${this.baseUrl}/admin/add-article`, article);
+    }
+
+    acceptDeliverer(id : string){
+        return this.http.get(`${this.baseUrl}/admin/accept-deliverer/${id}`);
+    }
+
+    getAllOrders(){
+        return this.http.get<Array<Order>>(`${this.baseUrl}/admin/all-orders`);
     }
 
     

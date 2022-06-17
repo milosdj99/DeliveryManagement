@@ -12,6 +12,9 @@
         <li style="background-color: aquamarine;"  class="nav-item">
           <a class="nav-link" aria-current="page" href="/register">Profil</a>
         </li>
+        <li style="background-color: aquamarine;"  class="nav-item">
+          <button class="nav-link" aria-current="page" (click)="newOrder()">Nova porudzbina</button>
+        </li>
         <li style="background-color: aquamarine;" class="nav-item">
           <button class="nav-link" (click)="currentOrder()">Trenutna porudzbina</button>
         </li>
@@ -22,6 +25,10 @@
     </div>
   </div>
 </nav>
+
+<div *ngIf="apiError==true" class="alert alert-danger" role="alert">
+  Vec imate dostavu na cekanju!
+</div>
 
 <div *ngIf="showBasket" class="card" style="float: right;" >
   <div class="card-body">
@@ -63,5 +70,12 @@
 </div>
 
 <app-order-component *ngFor="let o of orders" [order] = 'o'></app-order-component>
+
+<div class="card" *ngIf="showTimer">
+    <tr>
+      <td>Vreme do dostave:</td>
+      <td>{{deliveryMinutes}} : {{deliverySeconds}}</td>
+    </tr>
+</div>
 
 

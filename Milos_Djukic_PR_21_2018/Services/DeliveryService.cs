@@ -30,10 +30,7 @@ namespace Milos_Djukic_PR_21_2018.Services
             _mapper = mapper;
         }
 
-        public List<Deliverer> GetAllDeliverers()
-        {
-            return _context.Deliverers.ToList();
-        }
+        #region Customer
 
         public UserRegisterDto GetUserById(Guid id)
         {
@@ -60,60 +57,7 @@ namespace Milos_Djukic_PR_21_2018.Services
             }
         }
 
-        public void ModifyUser(Guid id, UserRegisterDto newUser)
-        {
-            var user = _context.Admins.Where(x => x.Id == newUser.Id).FirstOrDefault();
-
-            if (user != null)
-            {
-                user.Username = newUser.Username;
-                user.Name = newUser.Name;
-                user.Surname = newUser.Surname;
-                user.DateOfBirth = newUser.DateOfBirth;
-                user.Address = newUser.Address;
-                user.Email = newUser.Email;
-                user.ImageUrl = newUser.ImageUrl;
-
-                _context.SaveChanges();
-
-            }
-            else
-            {
-                var user1 = _context.Deliverers.Where(x => x.Id == newUser.Id).FirstOrDefault();
-
-                if (user1 != null)
-                {
-                    user1.Username = newUser.Username;
-                    user1.Name = newUser.Name;
-                    user1.Surname = newUser.Surname;
-                    user1.DateOfBirth = newUser.DateOfBirth;
-                    user1.Address = newUser.Address;
-                    user1.Email = newUser.Email;
-                    user1.ImageUrl = newUser.ImageUrl;
-
-                    _context.SaveChanges();
-
-                }
-                else
-                {
-
-                    var user2 = _context.Deliverers.Where(x => x.Id == newUser.Id).FirstOrDefault();
-
-                    user2.Username = newUser.Username;
-                    user2.Name = newUser.Name;
-                    user2.Surname = newUser.Surname;
-                    user2.DateOfBirth = newUser.DateOfBirth;
-                    user2.Address = newUser.Address;
-                    user2.Email = newUser.Email;
-                    user2.ImageUrl = newUser.ImageUrl;
-
-                    _context.SaveChanges();
-                }
-
-                
-
-            }
-        }
+        
 
         public UserRegisterDto GetUserByUsername(string username)
         {
@@ -158,19 +102,23 @@ namespace Milos_Djukic_PR_21_2018.Services
             return articlesDtos; 
         }
 
-        public void AddArticle(ArticleDTO article)
-        {
-            Article newArticle = _mapper.Map<Article>(article);
+        
 
-            _context.Articles.Add(newArticle);
-            _context.SaveChanges();
-        }
-
-        public void AddOrder(OrderDto order, Guid id)
+        public bool AddOrder(OrderDto order, Guid id)
         {
+
+            if(_context.Orders.Where(x => x.CustomerId == id && x.Accepted == false).FirstOrDefault() != null)
+            {
+                return false;
+            }
+
             Order newOrder = _mapper.Map<Order>(order);
 
+            newOrder.Id = new Guid();
+
             newOrder.Accepted = false;
+
+            newOrder.Time = newOrder.Time.AddDays(1);
 
             newOrder.Customer = _context.Customers.Where(x => x.Id == id).FirstOrDefault();
 
@@ -183,7 +131,7 @@ namespace Milos_Djukic_PR_21_2018.Services
                 Article arr = _context.Articles.Where(x => x.Id == a.Id).FirstOrDefault();
 
                 
-                newOrder.OrderArticles.Add(new OrderArticle() { Article = arr, Order = newOrder });
+                newOrder.OrderArticles.Add(new OrderArticle() {  Article = arr, Order = newOrder });
             } 
 
             
@@ -191,11 +139,13 @@ namespace Milos_Djukic_PR_21_2018.Services
             _context.Orders.Add(newOrder);
 
             _context.SaveChanges();
+
+            return true;
         }
 
         public OrderDto GetCurrentOrderCustomer(Guid id)
         {
-            var order =  _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.CustomerId == id && x.Accepted == true).FirstOrDefault();
+            var order =  _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.CustomerId == id && x.Time > DateTime.Now).FirstOrDefault();
 
             if(order == null)
             {
@@ -216,11 +166,15 @@ namespace Milos_Djukic_PR_21_2018.Services
 
         public List<OrderDto> GetCustomerOrders(Guid id)
         {
-            var orders = _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.CustomerId == id && x.Time < DateTime.Now).ToList();
+            var orders =  _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.CustomerId == id && x.Time < DateTime.Now).ToList();
 
             return OrderListToDtos(orders);
         }
 
+        #endregion
+
+
+        #region Deliverer
         public List<OrderDto> GetNewOrdersDeliverer(Guid id)
         {
             var orders = _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.Accepted == false).ToList();
@@ -237,7 +191,7 @@ namespace Milos_Djukic_PR_21_2018.Services
 
         public OrderDto GetCurrentOrderDeliverer(Guid id)
         {
-            var order = _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.DelivererId == id && x.Accepted == true).FirstOrDefault();
+            var order = _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.DelivererId == id && x.Accepted == true && x.Time > DateTime.Now).FirstOrDefault();
 
             if (order == null)
             {
@@ -256,28 +210,81 @@ namespace Milos_Djukic_PR_21_2018.Services
             return orderDto;
         }
 
-        public void ConfirmOrder(Guid id, Guid orderId)
+        public bool ConfirmOrder(Guid id, Guid orderId)
         {
+
+            if(_context.Orders.Where(x => x.Id == id && x.Accepted == true && x.Time > DateTime.Now).FirstOrDefault() != null)
+            {
+                return false;
+            }
+
             Deliverer user = _context.Deliverers.Where(x => x.Id == id).FirstOrDefault();
 
-            _context.Orders.Where(x => x.Id == id).FirstOrDefault().Deliverer = user;
+            _context.Orders.Where(x => x.Id == orderId).FirstOrDefault().Deliverer = user;
 
-            _context.Orders.Where(x => x.Id == id).FirstOrDefault().Accepted = true;
+            _context.Orders.Where(x => x.Id == orderId).FirstOrDefault().Accepted = true;
 
             Random r = new Random();
 
-            _context.Orders.Where(x => x.Id == id).FirstOrDefault().Time.AddMinutes(r.Next(1, 3));
+            _context.Orders.Where(x => x.Id == orderId).FirstOrDefault().Time = DateTime.Now.AddMinutes(r.Next(1, 3));
+
+            _context.SaveChanges();
+
+            return true;
+        }
+
+        #endregion
+
+        #region Admin
+
+        public void AddArticle(ArticleDTO article)
+        {
+            Article newArticle = _mapper.Map<Article>(article);
+
+            _context.Articles.Add(newArticle);
+            _context.SaveChanges();
+        }
+
+        public List<UserRegisterDto> GetAllDeliverers()
+        {
+            var deliverers =  _context.Deliverers.ToList();
+
+            List<UserRegisterDto> delivererDtos = new List<UserRegisterDto>();
+
+            foreach(Deliverer d in deliverers)
+            {
+                UserRegisterDto dto = _mapper.Map<UserRegisterDto>(d);
+
+                delivererDtos.Add(dto);
+            }
+
+            return delivererDtos;
+        }
+
+        public void AcceptDeliverer(Guid id)
+        {
+            var user = _context.Deliverers.Where(x => x.Id == id).FirstOrDefault();
+
+            user.Approved = true;
 
             _context.SaveChanges();
         }
 
+        public List<OrderDto> GetAllOrders()
+        {
+            var orders = _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).ToList();
 
-        
+            return OrderListToDtos(orders);
 
+        }
+
+        #endregion
+
+        #region Login/Register
 
         public UserRegisterDto Register(UserRegisterDto userFromFront)
         {
-            if (_context.Deliverers.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null || _context.Customers.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null)
+            if (_context.Deliverers.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null || _context.Customers.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null || _context.Admins.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null)
             {
                 return null;
             }
@@ -385,6 +392,71 @@ namespace Milos_Djukic_PR_21_2018.Services
             
         }
 
+        public bool ModifyUser(Guid id, UserRegisterDto newUser)
+        {
+
+            if (_context.Deliverers.Where(x => x.Username == newUser.Username).FirstOrDefault() != null || _context.Customers.Where(x => x.Username == newUser.Username).FirstOrDefault() != null || _context.Admins.Where(x => x.Username == newUser.Username).FirstOrDefault() != null)
+            {
+                return false;
+            }
+
+            var user = _context.Admins.Where(x => x.Id == newUser.Id).FirstOrDefault();
+
+            if (user != null)
+            {
+                user.Username = newUser.Username;
+                user.Name = newUser.Name;
+                user.Surname = newUser.Surname;
+                user.DateOfBirth = newUser.DateOfBirth;
+                user.Address = newUser.Address;
+                user.Email = newUser.Email;
+                user.ImageUrl = newUser.ImageUrl;
+
+                _context.SaveChanges();
+
+            }
+            else
+            {
+                var user1 = _context.Deliverers.Where(x => x.Id == newUser.Id).FirstOrDefault();
+
+                if (user1 != null)
+                {
+                    user1.Username = newUser.Username;
+                    user1.Name = newUser.Name;
+                    user1.Surname = newUser.Surname;
+                    user1.DateOfBirth = newUser.DateOfBirth;
+                    user1.Address = newUser.Address;
+                    user1.Email = newUser.Email;
+                    user1.ImageUrl = newUser.ImageUrl;
+
+                    _context.SaveChanges();
+
+                }
+                else
+                {
+
+                    var user2 = _context.Deliverers.Where(x => x.Id == newUser.Id).FirstOrDefault();
+
+                    user2.Username = newUser.Username;
+                    user2.Name = newUser.Name;
+                    user2.Surname = newUser.Surname;
+                    user2.DateOfBirth = newUser.DateOfBirth;
+                    user2.Address = newUser.Address;
+                    user2.Email = newUser.Email;
+                    user2.ImageUrl = newUser.ImageUrl;
+
+                    _context.SaveChanges();
+                }
+
+
+
+            }
+
+            return true;
+        }
+
+        #endregion
+
         private List<OrderDto> OrderListToDtos(List<Order> list)
         {
             List<OrderDto> orderDtos = new List<OrderDto>();
@@ -406,5 +478,6 @@ namespace Milos_Djukic_PR_21_2018.Services
 
             return orderDtos;
         }
+        
     }
 }

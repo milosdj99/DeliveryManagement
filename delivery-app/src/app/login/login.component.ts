@@ -53,14 +53,15 @@ export class LoginComponent implements OnInit {
 
               this.router.navigateByUrl('/dashboard/deliverer');
 
-          } else {
-            //TO DO: admin
+          } else if(localStorage.getItem('role') == 'admin') {
+            
+              this.router.navigateByUrl('/dashboard/admin');
           }
 
           
       },
       error=>{
-        this.router.navigateByUrl("/login");
+        this.apiError = true;
       }
       
     )

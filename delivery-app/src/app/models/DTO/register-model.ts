@@ -1,4 +1,5 @@
 export class RegisterModel {
+    id : string="";
     username : string ="";
     email : string ="";
     password : string ="";
