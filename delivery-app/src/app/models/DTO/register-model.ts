@@ -9,4 +9,5 @@ export class RegisterModel {
     address : string ="";
     imageUrl : string ="";
     type : string = "";
+    state : string = "";
 }

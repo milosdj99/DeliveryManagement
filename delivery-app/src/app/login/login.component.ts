@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LoginModel } from '../models/DTO/login-model';
@@ -14,11 +14,15 @@ import { ApiService } from '../services/api-service';
 export class LoginComponent implements OnInit {
 
   formGroupLogin = new FormGroup({
-    username : new FormControl(),
-    password : new FormControl()
+    email : new FormControl("", [Validators.required, Validators.email]),
+    password : new FormControl("", Validators.required)
   }) 
 
   apiError = false;
+  requiredError = false;
+  emailError = false;
+
+  errorMessage = "";
 
   constructor(private api: ApiService, private toastr: ToastrService, private router: Router) { }
 
@@ -29,10 +33,24 @@ export class LoginComponent implements OnInit {
   submitLogin(){
 
     this.apiError = false;
+    this.requiredError = false;
+    this.emailError = false;
+
+
+    if(this.formGroupLogin.get('email')?.errors?['email']:""){
+      this.emailError = true;
+      return;
+    }
+
+
+    if(this.formGroupLogin.get('email')?.errors?['required']:"" || this.formGroupLogin.get('password')?.errors?['required']:""){
+        this.requiredError = true;
+        return;
+    }
 
     let model = new LoginModel();
 
-    model.username = this.formGroupLogin.get('username')?.value;
+    model.email = this.formGroupLogin.get('email')?.value;
     model.password = this.formGroupLogin.get('password')?.value;
 
 
@@ -62,6 +80,7 @@ export class LoginComponent implements OnInit {
       },
       error=>{
         this.apiError = true;
+        this.errorMessage = error.error;
       }
       
     )

@@ -115,6 +115,7 @@ export class DashboardDelivererComponent implements OnInit {
   
   logOut(){
     localStorage.setItem("isLoggedIn", "false");
+    localStorage.setItem('role', "null");
     localStorage.removeItem('token');
 
     this.router.navigateByUrl("/login");

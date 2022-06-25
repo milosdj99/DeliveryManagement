@@ -9,16 +9,24 @@
                         <div class="mb-md-5 mt-md-4 pb-5">
 
                             <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
-                            <p class="text-white-50 mb-5">Unesite username i lozinku!</p>
+                            <p class="text-white-50 mb-5">Unesite e-mail i lozinku!</p>
+
+                            <div *ngIf="requiredError" class="alert alert-danger" role="alert">
+                                Niste popunili sva polja!
+                            </div>
+
+                            <div *ngIf="emailError" class="alert alert-danger" role="alert">
+                                Niste uneli odgovarajuci e-mail!
+                            </div>
                             <div *ngIf="apiError" class="alert alert-danger" role="alert">
-                                Pogresan username ili lozinka!
+                                {{errorMessage}}
                             </div>
                             
                             <form [formGroup]="formGroupLogin">
                                 <div class="form-outline form-white mb-4">
-                                    <input formControlName="username" type="text" id="typeEmailX"
+                                    <input formControlName="email" type="email" id="typeEmailX"
                                         class="form-control form-control-lg" />
-                                    <label class="form-label" for="typeEmailX">Username</label>
+                                    <label class="form-label" for="typeEmailX">Email</label>
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
@@ -40,8 +48,7 @@
                         </div>
 
                         <div>
-                            <p class="mb-0">Don't have an account? <a href="/register" class="text-white-50 fw-bold">Sign
-                                    Up</a>
+                            <p class="mb-0">Nemate nalog? <a href="/register" class="text-white-50 fw-bold">Registruj se</a>
                             </p>
                         </div>
 

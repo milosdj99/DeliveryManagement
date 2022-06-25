@@ -16,6 +16,8 @@ import { ArticleComponent } from './article/article.component';
 import { OrderComponent } from './order-component/order.component';
 import { DashboardDelivererComponent } from './dashboard-deliverer/dashboard-deliverer.component';
 import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.component';
+import { DelivererComponent } from './deliverer/deliverer.component';
+import { AddArticleComponent } from './add-article/add-article.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.compo
     ArticleComponent,
     OrderComponent,
     DashboardDelivererComponent,
-    DashboardAdminComponent
+    DashboardAdminComponent,
+    DelivererComponent,
+    AddArticleComponent
   ],
   imports: [
     BrowserModule,

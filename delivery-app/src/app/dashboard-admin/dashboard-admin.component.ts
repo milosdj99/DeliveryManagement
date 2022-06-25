@@ -17,12 +17,20 @@ export class DashboardAdminComponent implements OnInit {
 
   orders : Array<Order> = [];
 
+  showDeliverers: boolean = false;
+
+  showOrders: boolean = false;
+
   ngOnInit(): void {
+
     this.api.getAllOrders().subscribe(
       data => {
         this.orders = data;
       }
     );
+
+    this.showOrders = true;
+    this.showDeliverers = false;
   }
 
 
@@ -36,17 +44,32 @@ export class DashboardAdminComponent implements OnInit {
   }
 
   allOrders(){
+    
+    this.api.getAllOrders().subscribe(
+      data => {
+        this.orders = data;
+      }
+    );
 
+    this.showOrders = true;
+    this.showDeliverers = false;
   }
 
 
   allDeliverers(){
+      this.api.getAllDeliveres().subscribe(
+        data => {
+          this.deliverers = data;
+        }
+      );
 
+      this.showDeliverers = true;
+      this.showOrders = false;
   }
 
 
   addArticle(){
-    
+    this.router.navigateByUrl("add-article");
   }
 
 }

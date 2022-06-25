@@ -45,7 +45,7 @@ export class ApiService{
     }
 
     addOrder(order: Order){
-        return this.http.post(`${this.baseUrl}/add-order/${this.id}`, order);
+        return this.http.post(`${this.baseUrl}/customer/add-order/${this.id}`, order);
     }
 
     getCurrentOrderCustomer(){
@@ -80,8 +80,8 @@ export class ApiService{
         return this.http.post(`${this.baseUrl}/admin/add-article`, article);
     }
 
-    acceptDeliverer(id : string){
-        return this.http.get(`${this.baseUrl}/admin/accept-deliverer/${id}`);
+    changeStatus(id : string, status: string){
+        return this.http.get(`${this.baseUrl}/admin/change-state/${id}/${status}`);
     }
 
     getAllOrders(){

@@ -6,11 +6,4 @@
     <ul *ngFor="let ing of ingredients" class="list-group list-group-flush">
       <li type="bullet" class="card gx-5">{{ing}}</li>
     </ul>
-    <div class="card">
-        <label>Količina:</label>
-        <input type="number" value="1" min="1" #amount>
-    </div>
-    <div class="card">
-      <button (click) = "addArticle(amount.value)">Dodaj</button>
-    </div>
   </div>

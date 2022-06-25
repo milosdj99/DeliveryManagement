@@ -30,10 +30,17 @@ namespace Milos_Djukic_PR_21_2018
         }
 
 
+        [HttpGet("articles")]
+        public IActionResult GetArticles()
+        {
+            return Ok(_service.GetAllArticles());
+        }
+
+
         #region Customer
 
 
-        [HttpPost("add-order/{id}")]
+        [HttpPost("customer/add-order/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult AddOrder([FromBody] OrderDto order, [FromRoute] Guid id)
         {
@@ -118,9 +125,15 @@ namespace Milos_Djukic_PR_21_2018
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult AddArticle([FromBody]ArticleDTO article)
         {
-            _service.AddArticle(article);
+            if (_service.AddArticle(article))
+            {
+                return Ok();
+            } else
+            {
+                return BadRequest();
+            }
 
-            return Ok();
+            
         }
 
 
@@ -131,20 +144,22 @@ namespace Milos_Djukic_PR_21_2018
             return Ok(_service.GetAllDeliverers());
         }
 
-        [HttpGet("admin/accept-deliverer/{id}")]
+        [HttpGet("admin/change-state/{id}/{state}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult AcceptDeliverer([FromRoute] Guid id)
+        public IActionResult ChangeDelivererState([FromRoute] Guid id, [FromRoute] string state)
         {
-            _service.AcceptDeliverer(id);
+            _service.ChangeState(id, state);
             return Ok();
         }
 
-        [HttpGet("/admin/all-orders")]
+        [HttpGet("admin/all-orders")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetAllOrders()
         {
             return Ok(_service.GetAllOrders());
         }
+
+        
 
         #endregion
 
@@ -155,7 +170,11 @@ namespace Milos_Djukic_PR_21_2018
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult Login([FromBody]UserLoginDto user)
         {
-            if(_service.Login(user) != null)
+            if (_service.Login(user) == "NOT_APPROVED")
+            {
+                return BadRequest("Vas dostavljacki nalog nije verifikovan!");
+
+            }else if (_service.Login(user) != null)
             {
                 TokenModel token = new TokenModel();
                 
@@ -163,15 +182,17 @@ namespace Milos_Djukic_PR_21_2018
                 
                 return Ok(token);
 
-            } else
+            }
+            else
             {
-                return BadRequest();
+                return BadRequest("Pogresan e-mail ili lozinka!");
             }
         }
 
         [HttpPost("register")]
         public ActionResult Register([FromBody]UserRegisterDto user)
         {
+            user.Id = new Guid();
             var userNew = _service.Register(user);
             if (userNew != null)
             {

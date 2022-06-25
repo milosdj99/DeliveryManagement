@@ -1,6 +1,4 @@
-<div style="width: 50px">
-    <button (click)="logOut()"></button>
-  </div>
+
   
   <nav class="navbar navbar-expand-lg navbar-light bg-dark">
     <div class="container-fluid">
@@ -25,4 +23,9 @@
     </div>
   </nav>
 
-  <app-order-component *ngFor="let o of orders" [order] = 'o'></app-order-component>
+  <div *ngIf="showOrders">
+    <app-order-component *ngFor="let o of orders" [order] = 'o'></app-order-component>
+  </div>
+  <div *ngIf="showDeliverers">
+    <app-deliverer *ngFor="let d of deliverers" [user] = 'd'></app-deliverer>
+  </div>

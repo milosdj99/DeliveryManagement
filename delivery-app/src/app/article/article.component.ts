@@ -9,8 +9,6 @@ import { Article } from '../models/article-model';
 export class ArticleComponent implements OnInit {
 
   @Input() article: Article = new Article();
-
-  @Output() addEvent = new EventEmitter();
   
 
   constructor() { }
@@ -21,9 +19,4 @@ export class ArticleComponent implements OnInit {
   get ingredients(){
     return this.article.ingredients.split(',');
   }
-
-  addArticle(amount: any){
-    this.addEvent.emit(this.article.name + ',' + amount);
-  }
-
 }

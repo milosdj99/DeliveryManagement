@@ -11,8 +11,12 @@
                             <h2 *ngIf="!isLoggedIn" class="fw-bold mb-2 text-uppercase">Registracija</h2>
                             <h2 *ngIf="isLoggedIn" class="fw-bold mb-2 text-uppercase">Izmena podataka</h2>
                             <p class="text-white-50 mb-5">Molimo unesite svoje podatke!</p>
+
+                            <div *ngIf="successfulChange" class="alert alert-success" role="alert">
+                                Uspesna izmena podataka!
+                            </div>
                             <div *ngIf="apiError" class="alert alert-danger" role="alert">
-                                Vec postoji korisnik sa tim username-om!
+                                Vec postoji korisnik sa tim email-om!
                             </div>
                             <div *ngIf="requiredError" class="alert alert-danger" role="alert">
                                 Niste popunili sva polja!
@@ -44,7 +48,7 @@
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
-                                    <input formControlName="dateOfBirth" type="text" id="typeNameX"
+                                    <input formControlName="dateOfBirth" type="date" id="typeNameX"
                                         class="form-control form-control-lg" />
                                     <label class="form-label" for="typeNameX">Datum rodjenja: </label>
                                 </div>
@@ -62,9 +66,13 @@
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
-                                    <input formControlName="imageUrl" type="text" id="typePasswordX"
+                                    <input formControlName="imageUrl" type="file" id="typePasswordX"
                                         class="form-control form-control-lg" />
                                     <label class="form-label" for="typePasswordX">Slika</label>
+                                </div>
+
+                                <div>
+                                    <img id="slika"/>
                                 </div>
 
                                 <div *ngIf="!isLoggedIn">
@@ -100,6 +108,10 @@
                                 <a href="#!" class="text-white"><i class="fab fa-google fa-lg"></i></a>
                             </div>
 
+                        </div>
+
+                        <div *ngIf="!isLoggedIn">
+                            <p class="mb-0">Vec imate nalog? <a href="/login" class="text-white-50 fw-bold">Prijavi se</a></p>
                         </div>
 
                         

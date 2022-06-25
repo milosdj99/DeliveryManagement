@@ -237,12 +237,21 @@ namespace Milos_Djukic_PR_21_2018.Services
 
         #region Admin
 
-        public void AddArticle(ArticleDTO article)
+        public bool AddArticle(ArticleDTO article)
         {
+            article.Id = new Guid();
+
             Article newArticle = _mapper.Map<Article>(article);
+
+            if(_context.Articles.Where(x => x.Name == newArticle.Name).FirstOrDefault() != null)
+            {
+                return false;
+            }
 
             _context.Articles.Add(newArticle);
             _context.SaveChanges();
+
+            return true;
         }
 
         public List<UserRegisterDto> GetAllDeliverers()
@@ -261,11 +270,11 @@ namespace Milos_Djukic_PR_21_2018.Services
             return delivererDtos;
         }
 
-        public void AcceptDeliverer(Guid id)
+        public void ChangeState(Guid id, string state)
         {
             var user = _context.Deliverers.Where(x => x.Id == id).FirstOrDefault();
 
-            user.Approved = true;
+            user.State = state;
 
             _context.SaveChanges();
         }
@@ -284,7 +293,9 @@ namespace Milos_Djukic_PR_21_2018.Services
 
         public UserRegisterDto Register(UserRegisterDto userFromFront)
         {
-            if (_context.Deliverers.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null || _context.Customers.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null || _context.Admins.Where(x => x.Username == userFromFront.Username).FirstOrDefault() != null)
+            
+
+            if (_context.Deliverers.Where(x => x.Email == userFromFront.Email).FirstOrDefault() != null || _context.Customers.Where(x => x.Email == userFromFront.Email).FirstOrDefault() != null || _context.Admins.Where(x => x.Email == userFromFront.Email).FirstOrDefault() != null)
             {
                 return null;
             }
@@ -292,7 +303,7 @@ namespace Milos_Djukic_PR_21_2018.Services
             if (userFromFront.Type == "Deliverer")
             {
                 Deliverer user = _mapper.Map<Deliverer>(userFromFront);
-
+                user.State = "HOLD";
                  user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
                  _context.Deliverers.Add(user);
                  _context.SaveChanges();
@@ -308,7 +319,7 @@ namespace Milos_Djukic_PR_21_2018.Services
                  _context.SaveChanges();
 
                  return _mapper.Map<UserRegisterDto>(user);              
-            }
+            } 
         }
 
         public string Login(UserLoginDto user)
@@ -320,25 +331,25 @@ namespace Milos_Djukic_PR_21_2018.Services
 
             string hashedPassword;
 
-            if(_context.Admins.Where(x => x.Username == user.Username).FirstOrDefault() != null)
+            if(_context.Admins.Where(x => x.Email == user.Email).FirstOrDefault() != null)
             {
-                AdminFromDatabase = _context.Admins.Where(x => x.Username == user.Username).FirstOrDefault();
+                AdminFromDatabase = _context.Admins.Where(x => x.Email == user.Email).FirstOrDefault();
 
                 type = 1;
 
                 hashedPassword = AdminFromDatabase.Password;
             }
-            else if (_context.Deliverers.Where(x => x.Username == user.Username).FirstOrDefault() != null)
+            else if (_context.Deliverers.Where(x => x.Email == user.Email).FirstOrDefault() != null)
             {
-                DelivererFromDatabase = _context.Deliverers.Where(x => x.Username == user.Username).FirstOrDefault();
+                DelivererFromDatabase = _context.Deliverers.Where(x => x.Email == user.Email).FirstOrDefault();
 
                 type = 2;
 
                 hashedPassword = DelivererFromDatabase.Password;
             }
-            else if (_context.Customers.Where(x => x.Username == user.Username).FirstOrDefault() != null)
+            else if (_context.Customers.Where(x => x.Email == user.Email).FirstOrDefault() != null)
             {
-                CustomerFromDatabase = _context.Customers.Where(x => x.Username == user.Username).FirstOrDefault();
+                CustomerFromDatabase = _context.Customers.Where(x => x.Email == user.Email).FirstOrDefault();
 
                 type = 3;
 
@@ -360,6 +371,10 @@ namespace Milos_Djukic_PR_21_2018.Services
                     claims.Add(new Claim("id", AdminFromDatabase.Id.ToString()));
                 }
                 if (type == 2) {
+                    if(DelivererFromDatabase.State != "APPROVED")
+                    {
+                        return "NOT_APPROVED";
+                    }
                     claims.Add(new Claim(ClaimTypes.Role, "deliverer"));
                     claims.Add(new Claim("role", "deliverer"));
                     claims.Add(new Claim("id", DelivererFromDatabase.Id.ToString()));
@@ -428,6 +443,7 @@ namespace Milos_Djukic_PR_21_2018.Services
                     user1.Address = newUser.Address;
                     user1.Email = newUser.Email;
                     user1.ImageUrl = newUser.ImageUrl;
+                    user1.State = "HOLD";
 
                     _context.SaveChanges();
 

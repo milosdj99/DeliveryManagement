@@ -17,7 +17,7 @@ namespace Milos_Djukic_PR_21_2018.Models
         public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
         public string ImageUrl { get; set; }
-        public bool Approved { get; set; }
+        public string State { get; set; }
         public List<Order> Orders { get; set; }
     }
 }

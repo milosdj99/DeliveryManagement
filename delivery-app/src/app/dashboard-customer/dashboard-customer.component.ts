@@ -89,11 +89,9 @@ export class DashboardCustomerComponent implements OnInit {
 
 
 
-  addArticle(articleAmount: string){
+  addArticle(articleName: string, amountt : string){
 
-
-    let articleName = articleAmount.split(',')[0];
-    let amount = parseInt(articleAmount.split(',')[1]);
+    let amount = parseInt(amountt);
 
     if(amount < 1){
       return;

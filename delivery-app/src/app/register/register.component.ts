@@ -15,11 +15,13 @@ import { JSDocComment } from '@angular/compiler';
 })
 export class RegisterComponent implements OnInit {
 
+  successfulChange = false;
   requiredError = false;
   emailError = false;
   passwordError = false;
   apiError = false;
   isLoggedIn = false;
+  imageUrl : string = "";
 
   formGroupRegister = new FormGroup({
     username : new FormControl("", Validators.required),
@@ -43,6 +45,7 @@ export class RegisterComponent implements OnInit {
       this.emailError = false;
       this.passwordError = false;
       this.apiError = false;
+      this.successfulChange = false;
 
 
       if(this.isLoggedIn){
@@ -54,11 +57,13 @@ export class RegisterComponent implements OnInit {
             this.formGroupRegister.get('email')?.patchValue(data.email);
             this.formGroupRegister.get('name')?.patchValue(data.name);
             this.formGroupRegister.get('surname')?.patchValue(data.surname);
-            this.formGroupRegister.get('dateOfBirth')?.patchValue(data.dateOfBirth);
+            this.formGroupRegister.get('dateOfBirth')?.patchValue(data.dateOfBirth.getDate);
             this.formGroupRegister.get('address')?.patchValue(data.address);
-            this.formGroupRegister.get('imageUrl')?.patchValue(data.imageUrl);
+            //this.formGroupRegister.get('imageUrl')?.patchValue(data.imageUrl);
             this.formGroupRegister.get('type')?.patchValue(data.type);
+            this.imageUrl = data.imageUrl;
 
+            document.getElementById("slika")?.setAttribute("src", data.imageUrl);
                 }
         )
       }
@@ -84,25 +89,24 @@ export class RegisterComponent implements OnInit {
     || this.formGroupRegister.get('address')?.errors?['required']:""
     || this.formGroupRegister.get('imageUrl')?.errors?['required']:""){
         this.requiredError = true;
+        return;
     }
     
 
     if(this.formGroupRegister.get('password1')?.value != this.formGroupRegister.get('password2')?.value){
       this.passwordError = true;
+      return;
     }
 
     if(this.formGroupRegister?.get('email')?.errors?['email']: ""){
       this.emailError = true;
+      return;
     }
-
-    if(this.requiredError || this.emailError || this.passwordError){
-
-      this.router.navigateByUrl("/register");
-
-    } else {
+   
 
       let model = new RegisterModel();
 
+      model.id = "3DAE2E51-4DC8-4108-360F-08DA4FEA0904";
       model.username = this.formGroupRegister.get('username')?.value;
       model.name = this.formGroupRegister.get('name')?.value;
       model.surname = this.formGroupRegister.get('surname')?.value;
@@ -127,14 +131,16 @@ export class RegisterComponent implements OnInit {
       } else {
           this.api.changeProfile(model).subscribe(
             data => {
-              this.router.navigateByUrl("/login");
+              //this.router.navigateByUrl("/login");
+              this.successfulChange = true;
+
           },
             error => {
               this.apiError = true;
             }
           );
       }
-    }
+    
 
     
   }

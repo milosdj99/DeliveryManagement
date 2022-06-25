@@ -17,5 +17,6 @@ namespace Milos_Djukic_PR_21_2018.DTO
         public string Address { get; set; }
         public string ImageUrl { get; set; }
         public string Type { get; set; }
+        public string State { get; set; }
     }
 }
