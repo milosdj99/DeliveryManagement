@@ -77,12 +77,12 @@ export class DashboardCustomerComponent implements OnInit {
     
     
     this.api.addOrder(order).subscribe(
-      error => {
-        this.apiError = true;
-      },
       data => {
         this.apiError = false;
-      }
+      },
+      error => {
+        this.apiError = true;
+      } 
     );
 
   }

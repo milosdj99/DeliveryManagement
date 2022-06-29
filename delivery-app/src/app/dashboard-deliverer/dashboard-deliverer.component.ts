@@ -41,11 +41,11 @@ export class DashboardDelivererComponent implements OnInit {
   
   confirmOrder(order: Order){
     this.api.confirmOrder(order.id).subscribe(
-      error => {
-        this.apiError = true;
-      },
       data => {
         this.currentOrder();
+      },
+      error => {
+        this.apiError = true;
       }
     );
     
@@ -118,7 +118,7 @@ export class DashboardDelivererComponent implements OnInit {
     localStorage.setItem('role', "null");
     localStorage.removeItem('token');
 
-    this.router.navigateByUrl("/login");
+    this.router.navigateByUrl("login");
   }
 
 }

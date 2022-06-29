@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient.Server;
 using Milos_Djukic_PR_21_2018.DTO;
 using Milos_Djukic_PR_21_2018.Models;
 using Milos_Djukic_PR_21_2018.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace Milos_Djukic_PR_21_2018
@@ -29,7 +33,7 @@ namespace Milos_Djukic_PR_21_2018
             return Ok(_service.GetUserById(id));
         }
 
-
+        
         [HttpGet("articles")]
         public IActionResult GetArticles()
         {
@@ -40,6 +44,7 @@ namespace Milos_Djukic_PR_21_2018
         #region Customer
 
 
+        [Authorize(Roles = "customer")]
         [HttpPost("customer/add-order/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult AddOrder([FromBody] OrderDto order, [FromRoute] Guid id)
@@ -54,8 +59,8 @@ namespace Milos_Djukic_PR_21_2018
 
         }
 
-           
 
+        [Authorize(Roles = "customer")]
         [HttpGet("customer/current-order/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -66,6 +71,7 @@ namespace Milos_Djukic_PR_21_2018
             
         }
 
+        [Authorize(Roles = "customer")]
         [HttpGet("customer/previous-orders/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult CustomerOrders([FromRoute] Guid id)
@@ -77,6 +83,7 @@ namespace Milos_Djukic_PR_21_2018
 
         #region Deliverer
 
+        [Authorize(Roles = "deliverer")]
         [HttpGet("deliverer/new-orders/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetNewOrders(Guid id)
@@ -84,7 +91,7 @@ namespace Milos_Djukic_PR_21_2018
             return Ok(_service.GetNewOrdersDeliverer(id));
         }
 
-
+        [Authorize(Roles = "deliverer")]
         [HttpGet("deliverer/previous-orders/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetDelivererOrders(Guid id)
@@ -92,6 +99,7 @@ namespace Milos_Djukic_PR_21_2018
             return Ok(_service.GetDelivererOrders(id));
         }
 
+        [Authorize(Roles = "deliverer")]
         [HttpGet("deliverer/current-order/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetCurrentOrderDeliverer(Guid id)
@@ -99,6 +107,7 @@ namespace Milos_Djukic_PR_21_2018
             return Ok(_service.GetCurrentOrderDeliverer(id));
         }
 
+        [Authorize(Roles = "deliverer")]
         [HttpGet("deliverer/confirm-order/{id}/{orderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult ConfirmOrder(Guid id, Guid orderId)
@@ -120,7 +129,7 @@ namespace Milos_Djukic_PR_21_2018
         #region Admin
 
 
-
+        [Authorize(Roles = "admin")]
         [HttpPost("admin/add-article")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult AddArticle([FromBody]ArticleDTO article)
@@ -137,6 +146,7 @@ namespace Milos_Djukic_PR_21_2018
         }
 
 
+        [Authorize(Roles = "admin")]
         [HttpGet("admin/all-deliverers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetAllDeliverers()
@@ -144,6 +154,7 @@ namespace Milos_Djukic_PR_21_2018
             return Ok(_service.GetAllDeliverers());
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("admin/change-state/{id}/{state}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult ChangeDelivererState([FromRoute] Guid id, [FromRoute] string state)
@@ -152,6 +163,7 @@ namespace Milos_Djukic_PR_21_2018
             return Ok();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("admin/all-orders")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetAllOrders()
@@ -196,8 +208,8 @@ namespace Milos_Djukic_PR_21_2018
             var userNew = _service.Register(user);
             if (userNew != null)
             {
-                //return CreatedAtAction(nameof(GetUserById), new { id = userNew.Id }, userNew);
-                return Ok();
+                return CreatedAtAction(nameof(GetUserById), new { id = userNew.Id }, userNew);
+                
 
             }
             else
@@ -208,6 +220,7 @@ namespace Milos_Djukic_PR_21_2018
 
         [HttpPut("modify-profile/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult ModifyProfile([FromRoute] Guid id, [FromBody] UserRegisterDto user)
         {
             if (_service.ModifyUser(id, user))
@@ -220,6 +233,57 @@ namespace Milos_Djukic_PR_21_2018
             }
 
 
+        }
+
+        [HttpPut("change-picture/{id}"), DisableRequestSizeLimit]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult ChangePicture([FromRoute] Guid id)
+        {
+            var file = Request.Form.Files.FirstOrDefault();
+
+            var folderName = Path.Combine("Resources", "Images");
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+            if(file.Length > 0)
+            {
+                var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                var fullPath = Path.Combine(path, fileName);
+                var dbPath = Path.Combine(folderName, fileName);
+
+                using(var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+
+                if(_service.ChangePicture(id, dbPath))
+                {
+                    return Ok();
+                } else
+                {
+                    return BadRequest();
+                }
+
+               
+            } else
+            {
+                return BadRequest();
+            }
+            
+        }
+
+        [HttpPost("facebook-login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult FacebookLogin([FromBody] UserRegisterDto user)
+        {
+            
+            TokenModel token = new TokenModel();
+
+            token.Value = _service.FacebookLogin(user);
+
+            return Ok(token);
         }
 
         #endregion

@@ -31,6 +31,14 @@ export class ApiService{
         return this.http.post<TokenModel>(`${this.baseUrl}/login`, model);
     }
 
+    changePicture(picture: FormData, id: string){
+        return this.http.put<string>(`${this.baseUrl}/change-picture/${id}`, picture);
+    }
+
+    facebookLogin(user: RegisterModel){
+        return this.http.post<TokenModel>(`${this.baseUrl}/facebook-login`, user);
+    }
+
     getUserById(){
         return this.http.get<RegisterModel>(`${this.baseUrl}/users/${this.id}`);
     }
@@ -87,6 +95,8 @@ export class ApiService{
     getAllOrders(){
         return this.http.get<Array<Order>>(`${this.baseUrl}/admin/all-orders`);
     }
+
+
 
     
 }

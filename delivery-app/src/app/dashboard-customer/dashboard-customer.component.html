@@ -1,4 +1,6 @@
-
+<div>
+  <button value="Log out" (click)="logOut()"></button>
+</div>
 
 
 <nav class="navbar navbar-expand-lg navbar-light bg-dark">
@@ -62,7 +64,7 @@
 </div>
 
 <div class="row">
-  <div style="width: 20rem; height: 20rem;"  class="col-md-2 gx-5" *ngFor="let art of articles" >   
+  <div  class="col-md-2 gx-5" *ngFor="let art of articles" >   
     <app-article [article]="art" ></app-article>
     <div class="card">
       <label>Količina:</label>

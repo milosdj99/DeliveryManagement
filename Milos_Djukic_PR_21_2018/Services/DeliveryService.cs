@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -122,7 +124,7 @@ namespace Milos_Djukic_PR_21_2018.Services
 
             newOrder.Customer = _context.Customers.Where(x => x.Id == id).FirstOrDefault();
 
-            newOrder.Deliverer = _context.Deliverers.Where(x => x.Id == new Guid("42E752EB-FAFE-40CF-26B1-08DA386D1DF1")).FirstOrDefault();
+            newOrder.Deliverer = _context.Deliverers.Where(x => x.Id == new Guid("393f57b1-6b12-4b09-968f-08da5646ce5f")).FirstOrDefault();
 
             newOrder.OrderArticles = new List<OrderArticle>();
 
@@ -213,7 +215,7 @@ namespace Milos_Djukic_PR_21_2018.Services
         public bool ConfirmOrder(Guid id, Guid orderId)
         {
 
-            if(_context.Orders.Where(x => x.Id == id && x.Accepted == true && x.Time > DateTime.Now).FirstOrDefault() != null)
+            if(_context.Orders.Where(x => x.DelivererId == id && x.Accepted == true && x.Time > DateTime.Now).FirstOrDefault() != null)
             {
                 return false;
             }
@@ -318,9 +320,17 @@ namespace Milos_Djukic_PR_21_2018.Services
                  _context.Customers.Add(user);
                  _context.SaveChanges();
 
-                 return _mapper.Map<UserRegisterDto>(user);              
+                
+
+                return _mapper.Map<UserRegisterDto>(user);
+
+                
             } 
         }
+
+
+
+
 
         public string Login(UserLoginDto user)
         {
@@ -391,7 +401,7 @@ namespace Milos_Djukic_PR_21_2018.Services
                 SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokeOptions = new JwtSecurityToken(
-                    issuer: "http://localhost:44398", 
+                    issuer: "http://localhost:44312", 
                     claims: claims, 
                     expires: DateTime.Now.AddMinutes(20), 
                     signingCredentials: signinCredentials 
@@ -407,10 +417,49 @@ namespace Milos_Djukic_PR_21_2018.Services
             
         }
 
+        public bool ChangePicture(Guid id, string path)
+        {
+           
+
+            if (_context.Admins.Where(x => x.Id == id).FirstOrDefault() != null)
+            {
+                var user = _context.Admins.Where(x => x.Id == id).FirstOrDefault();
+                user.ImageUrl = path;
+                _context.SaveChanges();
+
+                return true;
+            }
+            else if (_context.Deliverers.Where(x => x.Id == id).FirstOrDefault() != null)
+            {
+                var user = _context.Deliverers.Where(x => x.Id == id).FirstOrDefault();
+                user.ImageUrl = path;
+                _context.SaveChanges();
+
+                return true;
+
+            }
+            else if (_context.Customers.Where(x => x.Id == id).FirstOrDefault() != null)
+            {
+                var user = _context.Customers.Where(x => x.Id == id).FirstOrDefault();
+                user.ImageUrl = path;
+                _context.SaveChanges();
+
+                return true;
+
+            }
+            else
+            {
+                return false;
+            }
+
+
+        }
+
+
         public bool ModifyUser(Guid id, UserRegisterDto newUser)
         {
 
-            if (_context.Deliverers.Where(x => x.Username == newUser.Username).FirstOrDefault() != null || _context.Customers.Where(x => x.Username == newUser.Username).FirstOrDefault() != null || _context.Admins.Where(x => x.Username == newUser.Username).FirstOrDefault() != null)
+            if (_context.Deliverers.Where(x => x.Id == id).FirstOrDefault() == null && _context.Customers.Where(x => x.Id == id).FirstOrDefault() == null && _context.Admins.Where(x => x.Id == id).FirstOrDefault() == null)
             {
                 return false;
             }
@@ -469,6 +518,43 @@ namespace Milos_Djukic_PR_21_2018.Services
             }
 
             return true;
+        }
+
+        public string FacebookLogin(UserRegisterDto user)
+        {
+            user.Id = new Guid();
+            Customer customer = _mapper.Map<Customer>(user);
+
+            Customer customerFromDatabase = _context.Customers.Where(x => x.Email == customer.Email).FirstOrDefault();
+
+
+            if (customerFromDatabase == null)   //ne postoji
+            {
+                _context.Customers.Add(customer);
+                _context.SaveChanges();
+
+            } else
+            {
+                customer = customerFromDatabase;
+            }
+
+            List<Claim> claims = new List<Claim>();
+
+            claims.Add(new Claim(ClaimTypes.Role, "customer"));
+            claims.Add(new Claim("role", "customer"));
+            claims.Add(new Claim("id", customer.Id.ToString()));
+
+
+            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
+            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            var tokeOptions = new JwtSecurityToken(
+                issuer: "http://localhost:44312",
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(20),
+                signingCredentials: signinCredentials
+            );
+            string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+            return tokenString;
         }
 
         #endregion

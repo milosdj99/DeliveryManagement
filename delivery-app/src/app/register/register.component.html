@@ -1,3 +1,8 @@
+<div *ngIf="isLoggedIn">
+    <button value="Log out" (click)="logOut()"></button>
+</div>
+{{isLoggedIn}}
+
 <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -29,6 +34,18 @@
                             </div>
 
                             <form [formGroup]="formGroupRegister">
+
+                                <div>
+                                    <img id="slika" [src] = imageUrl/>
+                                </div>
+                                
+                                <div>
+                                    <input type="file" (change)="onPicChange($event)" placeholder="Promeni sliku..."/>
+                                </div>
+                                
+                                
+
+
                                 <div class="form-outline form-white mb-4">
                                     <input formControlName="username" type="text" id="typeUsernameX"
                                         class="form-control form-control-lg" />
@@ -65,15 +82,13 @@
                                     <label class="form-label" for="typeAddressX">Adresa</label>
                                 </div>
 
-                                <div class="form-outline form-white mb-4">
-                                    <input formControlName="imageUrl" type="file" id="typePasswordX"
+                                <!--<div class="form-outline form-white mb-4">
+                                    <input formControlName="imageUrl" type="image" id="typePasswordX"
                                         class="form-control form-control-lg" />
                                     <label class="form-label" for="typePasswordX">Slika</label>
-                                </div>
+                                </div>-->
 
-                                <div>
-                                    <img id="slika"/>
-                                </div>
+                                >
 
                                 <div *ngIf="!isLoggedIn">
                                     <select formControlName="type" class="form-select" aria-label="Default select example">

@@ -4,6 +4,7 @@ import { AddArticleComponent } from './add-article/add-article.component';
 import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.component';
 import { DashboardCustomerComponent } from './dashboard-customer/dashboard-customer.component';
 import { DashboardDelivererComponent } from './dashboard-deliverer/dashboard-deliverer.component';
+import { FacebookLoginComponent } from './facebook-login/facebook-login.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 
@@ -14,7 +15,8 @@ const routes: Routes = [
   {path: 'dashboard/customer', component: DashboardCustomerComponent},
   {path: 'dashboard/deliverer', component: DashboardDelivererComponent},
   {path: 'dashboard/admin', component: DashboardAdminComponent},
-  {path: 'add-article', component: AddArticleComponent}
+  {path: 'add-article', component: AddArticleComponent},
+  {path: 'facebook-login', component: FacebookLoginComponent}
 ];
 
 @NgModule({

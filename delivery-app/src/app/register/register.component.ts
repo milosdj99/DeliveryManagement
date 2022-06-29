@@ -15,6 +15,8 @@ import { JSDocComment } from '@angular/compiler';
 })
 export class RegisterComponent implements OnInit {
 
+  selectedImage: File;
+
   successfulChange = false;
   requiredError = false;
   emailError = false;
@@ -32,7 +34,6 @@ export class RegisterComponent implements OnInit {
     surname : new FormControl("", Validators.required),
     dateOfBirth : new FormControl("", Validators.required),
     address : new FormControl("", Validators.required),
-    imageUrl : new FormControl("", Validators.required),
     type : new FormControl("", Validators.required),
   })
   
@@ -61,15 +62,18 @@ export class RegisterComponent implements OnInit {
             this.formGroupRegister.get('address')?.patchValue(data.address);
             //this.formGroupRegister.get('imageUrl')?.patchValue(data.imageUrl);
             this.formGroupRegister.get('type')?.patchValue(data.type);
-            this.imageUrl = data.imageUrl;
+            //this.imageUrl = " http://localhost:44312/" +  data.imageUrl.replace('\').replace('/');
 
-            document.getElementById("slika")?.setAttribute("src", data.imageUrl);
+            this.imageUrl = " http://localhost:44312/" +  "Resources/Images/Capture.png";
+
+            //document.getElementById("slika")?.setAttribute("src", `https://localhost:44312/${data.imageUrl}`);
                 }
         )
       }
-    }
+    
       
-  
+  }
+
 
   submitRegister(){
 
@@ -117,9 +121,17 @@ export class RegisterComponent implements OnInit {
       model.type = this.formGroupRegister.get('type')?.value;
       model.password = this.formGroupRegister.get('password1')?.value;
          
+      let idForPicChange = "";
+
       if(!this.isLoggedIn){
           this.api.register(model).subscribe(
             data => {
+                
+
+                let imageData = new FormData();
+                imageData.append("image", this.selectedImage, this.selectedImage.name);
+                this.api.changePicture(imageData, data.id).subscribe();
+
                 this.router.navigateByUrl("/login");
             },
             error => {
@@ -134,6 +146,10 @@ export class RegisterComponent implements OnInit {
               //this.router.navigateByUrl("/login");
               this.successfulChange = true;
 
+              let imageData = new FormData();
+              imageData.append("image", this.selectedImage);
+              this.api.changePicture(imageData, localStorage.getItem("id")).subscribe();
+
           },
             error => {
               this.apiError = true;
@@ -141,8 +157,12 @@ export class RegisterComponent implements OnInit {
           );
       }
     
+      
+  }
 
-    
+
+  onPicChange(event){
+      this.selectedImage = <File>event.target.files[0];
   }
 
 }

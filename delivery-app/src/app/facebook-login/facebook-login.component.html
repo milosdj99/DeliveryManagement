@@ -11,20 +11,7 @@
                             <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
                             <p class="text-white-50 mb-5">Unesite e-mail i lozinku!</p>
 
-                            <div *ngIf="requiredError" class="alert alert-danger" role="alert">
-                                Niste popunili sva polja!
-                            </div>
-
-                            <div *ngIf="emailError" class="alert alert-danger" role="alert">
-                                Niste uneli odgovarajuci e-mail!
-                            </div>
-                            <div *ngIf="apiError" class="alert alert-danger" role="alert">
-                                {{errorMessage}}
-                            </div>
-
-                            <div *ngIf="apiErrorF" class="alert alert-danger" role="alert">
-                                Neuspesno prijavljivanje preko Facebook-a!
-                            </div>
+                            
                             
                             <form [formGroup]="formGroupLogin">
                                 <div class="form-outline form-white mb-4">
@@ -43,15 +30,12 @@
                             <button class="btn btn-outline-light btn-lg px-5"  type="submit"
                                 (click)="submitLogin()">Login</button>
 
-                                <button class="btn btn-outline-light btn-lg px-5"  type="submit"
-                                (click)="facebookLogin()">Ulogujte se putem Facebook-a</button>
+                            
 
                         </div>
 
-                        
-
                         <div>
-                            <p class="mb-0">Nemate nalog? <a href="/register" class="text-white-50 fw-bold">Registruj se</a>
+                            <p class="mb-0"><a href="/register" class="text-white-50 fw-bold">Pocetna strana</a>
                             </p>
                         </div>
 

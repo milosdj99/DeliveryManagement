@@ -18,6 +18,8 @@ import { DashboardDelivererComponent } from './dashboard-deliverer/dashboard-del
 import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.component';
 import { DelivererComponent } from './deliverer/deliverer.component';
 import { AddArticleComponent } from './add-article/add-article.component';
+import { FacebookLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 'angularx-social-login';
+import { FacebookLoginComponent } from './facebook-login/facebook-login.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { AddArticleComponent } from './add-article/add-article.component';
     DashboardDelivererComponent,
     DashboardAdminComponent,
     DelivererComponent,
-    AddArticleComponent
+    AddArticleComponent,
+    FacebookLoginComponent
   ],
   imports: [
     BrowserModule,
@@ -38,16 +41,31 @@ import { AddArticleComponent } from './add-article/add-article.component';
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
+    SocialLoginModule,
     ToastrModule.forRoot({
       progressBar: true
     }),
   ],
-  providers: [ApiService
-    /*{
+  providers: [ApiService,
+      {
        provide: HTTP_INTERCEPTORS,
        useClass: AuthInterceptor,
        multi: true,
-      }*/],
+      },
+      {
+        provide: 'SocialAuthServiceConfig',
+        useValue: {
+          autoLogin: false,
+          providers: [
+            {
+              id: FacebookLoginProvider.PROVIDER_ID,
+              provider: new FacebookLoginProvider(
+                '507606531160352'
+              )
+            }
+          ]
+        } as SocialAuthServiceConfig}],
+      
   bootstrap: [AppComponent]
 })
 export class AppModule { }
