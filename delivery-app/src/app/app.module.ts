@@ -19,8 +19,6 @@ import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.compo
 import { DelivererComponent } from './deliverer/deliverer.component';
 import { AddArticleComponent } from './add-article/add-article.component';
 import { FacebookLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 'angularx-social-login';
-import { FacebookLoginComponent } from './facebook-login/facebook-login.component';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,8 +30,7 @@ import { FacebookLoginComponent } from './facebook-login/facebook-login.componen
     DashboardDelivererComponent,
     DashboardAdminComponent,
     DelivererComponent,
-    AddArticleComponent,
-    FacebookLoginComponent
+    AddArticleComponent
   ],
   imports: [
     BrowserModule,

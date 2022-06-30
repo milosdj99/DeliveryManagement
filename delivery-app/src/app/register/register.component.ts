@@ -7,6 +7,7 @@ import { RegisterModel } from '../models/DTO/register-model';
 import { ApiService } from '../services/api-service';
 import  jwt_decode from 'jwt-decode';
 import { JSDocComment } from '@angular/compiler';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-register',
@@ -37,7 +38,7 @@ export class RegisterComponent implements OnInit {
     type : new FormControl("", Validators.required),
   })
   
-  constructor(private api: ApiService, private router: Router, private toastr: ToastrService) { }
+  constructor(private api: ApiService, private router: Router, private toastr: ToastrService, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
 
@@ -64,7 +65,9 @@ export class RegisterComponent implements OnInit {
             this.formGroupRegister.get('type')?.patchValue(data.type);
             //this.imageUrl = " http://localhost:44312/" +  data.imageUrl.replace('\').replace('/');
 
-            this.imageUrl = " http://localhost:44312/" +  "Resources/Images/Capture.png";
+            //this.imageUrl = "https://localhost:44312/" +  data.imageUrl;
+
+            this.imageUrl = "https://localhost:44312/api/" + "Resources/Images/Capture.PNG";
 
             //document.getElementById("slika")?.setAttribute("src", `https://localhost:44312/${data.imageUrl}`);
                 }
@@ -163,6 +166,17 @@ export class RegisterComponent implements OnInit {
 
   onPicChange(event){
       this.selectedImage = <File>event.target.files[0];
+  }
+
+  sanitizeImageUrl(imageUrl: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(imageUrl);
+  }
+
+  logOut(){
+    localStorage.setItem("isLoggedIn", "false");
+    localStorage.removeItem('token');
+
+    this.router.navigateByUrl("/login");
   }
 
 }

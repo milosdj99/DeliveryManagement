@@ -21,11 +21,11 @@
             <td>{{user.address}}</td>
             <td>{{user.imageUrl}}</td>
             <td>
-                <input id="id1" type="radio" [checked]="user.state=='APPROVED'" (click)="changeStatus('APPROVED')" value="Prihvacen"/>
+                <input id="id1" type="radio" [checked]="user.state=='APPROVED'" (click)="changeStatus('APPROVED')" value="Prihvacen" [name]=user.username/>
                 <label>Prihvacen</label>
-                <input id="id2" type="radio" [checked]="user.state=='HOLD'" (click)="changeStatus('HOLD')" value="Na cekanju"/>
+                <input id="id2" type="radio" [checked]="user.state=='HOLD'" (click)="changeStatus('HOLD')" value="Na cekanju" [name]=user.username/>
                 <label >Na cekanju</label>
-                <input id="id3" type="radio" [checked]="user.state=='DENIED'" (click)="changeStatus('DENIED')" value="Odbijen"/>  
+                <input id="id3" type="radio" [checked]="user.state=='DENIED'" (click)="changeStatus('DENIED')" value="Odbijen" [name]=user.username/>  
                 <label>Odbijen</label>            
             </td>
             

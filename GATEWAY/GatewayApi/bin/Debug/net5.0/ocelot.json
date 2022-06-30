@@ -1,0 +1,32 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/getff",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 31210
+        }
+      ],
+      "UpstreamPathTemplate": "/ff",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "users"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:28303"
+  },
+  "SwaggerEndPoints": [
+    {
+      "Key": "users",
+      "Config": [
+        {
+          "Name": "Users API",
+          "Version": "v1",
+          "Url": "http://localhost:31210/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+}

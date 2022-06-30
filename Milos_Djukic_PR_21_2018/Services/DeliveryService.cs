@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +34,7 @@ namespace Milos_Djukic_PR_21_2018.Services
             _mapper = mapper;
         }
 
-        #region Customer
+        
 
         public UserRegisterDto GetUserById(Guid id)
         {
@@ -48,18 +50,19 @@ namespace Milos_Djukic_PR_21_2018.Services
                 user = _mapper.Map<UserRegisterDto>(deliverer);
                 return user;
             }
-            else if(customer != null)
+            else if (customer != null)
             {
                 customer = _context.Customers.Where(x => x.Id == id).FirstOrDefault();
                 user = _mapper.Map<UserRegisterDto>(customer);
                 return user;
-            } else
+            }
+            else
             {
                 return null;
             }
         }
 
-        
+
 
         public UserRegisterDto GetUserByUsername(string username)
         {
@@ -91,7 +94,7 @@ namespace Milos_Djukic_PR_21_2018.Services
         {
             var articles = _context.Articles.ToList();
 
-            
+
 
             var articlesDtos = new List<ArticleDTO>();
 
@@ -101,15 +104,16 @@ namespace Milos_Djukic_PR_21_2018.Services
                 articlesDtos.Add(adto);
             }
 
-            return articlesDtos; 
+            return articlesDtos;
         }
 
-        
+
+        #region Customer
 
         public bool AddOrder(OrderDto order, Guid id)
         {
 
-            if(_context.Orders.Where(x => x.CustomerId == id && x.Accepted == false).FirstOrDefault() != null)
+            if (_context.Orders.Where(x => x.CustomerId == id && x.Accepted == false).FirstOrDefault() != null)
             {
                 return false;
             }
@@ -128,15 +132,15 @@ namespace Milos_Djukic_PR_21_2018.Services
 
             newOrder.OrderArticles = new List<OrderArticle>();
 
-            foreach(ArticleDTO a in order.Articles)
+            foreach (ArticleDTO a in order.Articles)
             {
                 Article arr = _context.Articles.Where(x => x.Id == a.Id).FirstOrDefault();
 
-                
-                newOrder.OrderArticles.Add(new OrderArticle() {  Article = arr, Order = newOrder });
-            } 
 
-            
+                newOrder.OrderArticles.Add(new OrderArticle() { Article = arr, Order = newOrder });
+            }
+
+
 
             _context.Orders.Add(newOrder);
 
@@ -147,9 +151,9 @@ namespace Milos_Djukic_PR_21_2018.Services
 
         public OrderDto GetCurrentOrderCustomer(Guid id)
         {
-            var order =  _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.CustomerId == id && x.Time > DateTime.Now).FirstOrDefault();
+            var order = _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.CustomerId == id && x.Time > DateTime.Now).FirstOrDefault();
 
-            if(order == null)
+            if (order == null)
             {
                 return null;
             }
@@ -158,17 +162,17 @@ namespace Milos_Djukic_PR_21_2018.Services
 
             orderDto.Articles = new List<ArticleDTO>();
 
-            foreach(OrderArticle oa in order.OrderArticles)
+            foreach (OrderArticle oa in order.OrderArticles)
             {
                 orderDto.Articles.Add(_mapper.Map<ArticleDTO>(oa.Article));
             }
 
-            return orderDto; 
+            return orderDto;
         }
 
         public List<OrderDto> GetCustomerOrders(Guid id)
         {
-            var orders =  _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.CustomerId == id && x.Time < DateTime.Now).ToList();
+            var orders = _context.Orders.Include(x => x.OrderArticles).ThenInclude(x => x.Article).Where(x => x.CustomerId == id && x.Time < DateTime.Now).ToList();
 
             return OrderListToDtos(orders);
         }
@@ -215,7 +219,7 @@ namespace Milos_Djukic_PR_21_2018.Services
         public bool ConfirmOrder(Guid id, Guid orderId)
         {
 
-            if(_context.Orders.Where(x => x.DelivererId == id && x.Accepted == true && x.Time > DateTime.Now).FirstOrDefault() != null)
+            if (_context.Orders.Where(x => x.DelivererId == id && x.Accepted == true && x.Time > DateTime.Now).FirstOrDefault() != null)
             {
                 return false;
             }
@@ -245,7 +249,7 @@ namespace Milos_Djukic_PR_21_2018.Services
 
             Article newArticle = _mapper.Map<Article>(article);
 
-            if(_context.Articles.Where(x => x.Name == newArticle.Name).FirstOrDefault() != null)
+            if (_context.Articles.Where(x => x.Name == newArticle.Name).FirstOrDefault() != null)
             {
                 return false;
             }
@@ -258,11 +262,11 @@ namespace Milos_Djukic_PR_21_2018.Services
 
         public List<UserRegisterDto> GetAllDeliverers()
         {
-            var deliverers =  _context.Deliverers.ToList();
+            var deliverers = _context.Deliverers.ToList();
 
             List<UserRegisterDto> delivererDtos = new List<UserRegisterDto>();
 
-            foreach(Deliverer d in deliverers)
+            foreach (Deliverer d in deliverers)
             {
                 UserRegisterDto dto = _mapper.Map<UserRegisterDto>(d);
 
@@ -277,6 +281,8 @@ namespace Milos_Djukic_PR_21_2018.Services
             var user = _context.Deliverers.Where(x => x.Id == id).FirstOrDefault();
 
             user.State = state;
+           
+            Email(user.Email, state);
 
             _context.SaveChanges();
         }
@@ -295,7 +301,7 @@ namespace Milos_Djukic_PR_21_2018.Services
 
         public UserRegisterDto Register(UserRegisterDto userFromFront)
         {
-            
+
 
             if (_context.Deliverers.Where(x => x.Email == userFromFront.Email).FirstOrDefault() != null || _context.Customers.Where(x => x.Email == userFromFront.Email).FirstOrDefault() != null || _context.Admins.Where(x => x.Email == userFromFront.Email).FirstOrDefault() != null)
             {
@@ -306,26 +312,27 @@ namespace Milos_Djukic_PR_21_2018.Services
             {
                 Deliverer user = _mapper.Map<Deliverer>(userFromFront);
                 user.State = "HOLD";
-                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                 _context.Deliverers.Add(user);
-                 _context.SaveChanges();
-
-                 return _mapper.Map<UserRegisterDto>(user);
-                
-            } else
-            {
-                Customer user = _mapper.Map<Customer>(userFromFront);
-
-                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                 _context.Customers.Add(user);
-                 _context.SaveChanges();
-
-                
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                _context.Deliverers.Add(user);
+                _context.SaveChanges();
 
                 return _mapper.Map<UserRegisterDto>(user);
 
-                
-            } 
+            }
+            else
+            {
+                Customer user = _mapper.Map<Customer>(userFromFront);
+
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                _context.Customers.Add(user);
+                _context.SaveChanges();
+
+
+
+                return _mapper.Map<UserRegisterDto>(user);
+
+
+            }
         }
 
 
@@ -341,7 +348,7 @@ namespace Milos_Djukic_PR_21_2018.Services
 
             string hashedPassword;
 
-            if(_context.Admins.Where(x => x.Email == user.Email).FirstOrDefault() != null)
+            if (_context.Admins.Where(x => x.Email == user.Email).FirstOrDefault() != null)
             {
                 AdminFromDatabase = _context.Admins.Where(x => x.Email == user.Email).FirstOrDefault();
 
@@ -364,24 +371,27 @@ namespace Milos_Djukic_PR_21_2018.Services
                 type = 3;
 
                 hashedPassword = CustomerFromDatabase.Password;
-            } else
+            }
+            else
             {
                 return null;
             }
 
-            
+
 
             if (BCrypt.Net.BCrypt.Verify(user.Password, hashedPassword))
             {
                 List<Claim> claims = new List<Claim>();
 
-                if (type == 1) {
+                if (type == 1)
+                {
                     claims.Add(new Claim(ClaimTypes.Role, "admin"));
                     claims.Add(new Claim("role", "admin"));
                     claims.Add(new Claim("id", AdminFromDatabase.Id.ToString()));
                 }
-                if (type == 2) {
-                    if(DelivererFromDatabase.State != "APPROVED")
+                if (type == 2)
+                {
+                    if (DelivererFromDatabase.State != "APPROVED")
                     {
                         return "NOT_APPROVED";
                     }
@@ -389,22 +399,23 @@ namespace Milos_Djukic_PR_21_2018.Services
                     claims.Add(new Claim("role", "deliverer"));
                     claims.Add(new Claim("id", DelivererFromDatabase.Id.ToString()));
                 }
-                if (type == 3) {
+                if (type == 3)
+                {
                     claims.Add(new Claim(ClaimTypes.Role, "customer"));
                     claims.Add(new Claim("role", "customer"));
                     claims.Add(new Claim("id", CustomerFromDatabase.Id.ToString()));
                 }
 
-                
 
-                
+
+
                 SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokeOptions = new JwtSecurityToken(
-                    issuer: "http://localhost:44312", 
-                    claims: claims, 
-                    expires: DateTime.Now.AddMinutes(20), 
-                    signingCredentials: signinCredentials 
+                    issuer: "http://localhost:44312",
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(20),
+                    signingCredentials: signinCredentials
                 );
                 string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
                 return tokenString;
@@ -414,12 +425,12 @@ namespace Milos_Djukic_PR_21_2018.Services
                 return null;
             }
 
-            
+
         }
 
         public bool ChangePicture(Guid id, string path)
         {
-           
+
 
             if (_context.Admins.Where(x => x.Id == id).FirstOrDefault() != null)
             {
@@ -533,7 +544,8 @@ namespace Milos_Djukic_PR_21_2018.Services
                 _context.Customers.Add(customer);
                 _context.SaveChanges();
 
-            } else
+            }
+            else
             {
                 customer = customerFromDatabase;
             }
@@ -580,6 +592,45 @@ namespace Milos_Djukic_PR_21_2018.Services
 
             return orderDtos;
         }
-        
+
+        private void Email(string to, string state)
+        {
+            string statee = "";
+
+            switch (state)
+            {
+                case "APPROVED":
+                    statee = "ODOBREN";
+                    break;
+                case "DENIED":
+                    statee = "ODBIJEN";
+                    break;
+                case "HOLD":
+                    statee = "NA CEKANJU";
+                    break;               
+            }
+
+            try
+            {
+                MailMessage message = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+                message.From = new MailAddress("milosdj9999@gmail.com");
+                message.To.Add(new MailAddress(to));
+                message.Subject = "Promena stanja dostavljaca";
+                message.IsBodyHtml = false; //to make message body as html  
+                message.Body = $"Vase stanje kao dostavljaca je promenjeno na {statee}.";
+                smtp.Port = 587;
+                smtp.Host = "smtp.gmail.com"; //for gmail host  
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential("milosdj9999@gmail.com", "reqrtgqjecxaojxd");
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.Send(message);
+            }
+            catch (Exception e) {
+                string ee = e.Message;
+            }
+
+        }
     }
 }

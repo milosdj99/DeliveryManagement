@@ -15,9 +15,7 @@ export class DelivererComponent implements OnInit {
 
 
   ngOnInit(): void {
-    document.getElementById("id1")?.setAttribute("name", "radioGroup" + this.user.username);
-    document.getElementById("id2")?.setAttribute("name", "radioGroup" + this.user.username);
-    document.getElementById("id3")?.setAttribute("name", "radioGroup" + this.user.username);
+    
   }
 
   changeStatus(status: string){
