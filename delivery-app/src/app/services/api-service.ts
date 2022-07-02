@@ -24,76 +24,81 @@ export class ApiService{
     }
 
     register(registerModel: RegisterModel){
-        return this.http.post<RegisterModel>(`${this.baseUrl}/register`, registerModel);
+        return this.http.post<RegisterModel>(`${this.baseUrl}/users/register`, registerModel);
     }
 
     login(model: LoginModel){
-        return this.http.post<TokenModel>(`${this.baseUrl}/login`, model);
+        return this.http.post<TokenModel>(`${this.baseUrl}/users/login`, model);
     }
 
     changePicture(picture: FormData, id: string){
-        return this.http.put<string>(`${this.baseUrl}/change-picture/${id}`, picture);
+        return this.http.put<string>(`${this.baseUrl}/users/change-picture/${id}`, picture);
     }
 
     facebookLogin(user: RegisterModel){
-        return this.http.post<TokenModel>(`${this.baseUrl}/facebook-login`, user);
+        return this.http.post<TokenModel>(`${this.baseUrl}/users/facebook-login`, user);
     }
 
     getUserById(){
-        return this.http.get<RegisterModel>(`${this.baseUrl}/users/${this.id}`);
+        return this.http.get<RegisterModel>(`${this.baseUrl}/users/user/${this.id}`);
     }
 
     changeProfile(registerModel: RegisterModel){
 
-        return this.http.put<RegisterModel>(`${this.baseUrl}/modify-profile/${this.id}`, registerModel);
+        return this.http.put<RegisterModel>(`${this.baseUrl}/users/modify-profile/${this.id}`, registerModel);
     }
 
     getArticles(){
-        return this.http.get<Array<Article>>(`${this.baseUrl}/articles`);
+        return this.http.get<Array<Article>>(`${this.baseUrl}/delivery/articles`);
     }
 
+    //customer
+
     addOrder(order: Order){
-        return this.http.post(`${this.baseUrl}/customer/add-order/${this.id}`, order);
+        return this.http.post(`${this.baseUrl}/delivery/customer/add-order/${this.id}`, order);
     }
 
     getCurrentOrderCustomer(){
-        return this.http.get<Order>(`${this.baseUrl}/customer/current-order/${this.id}`)
+        return this.http.get<Order>(`${this.baseUrl}/delivery/customer/current-order/${this.id}`)
     }
 
     getCustomerOrders(){
-        return this.http.get<Array<Order>>(`${this.baseUrl}/customer/previous-orders/${this.id}`);
+        return this.http.get<Array<Order>>(`${this.baseUrl}/delivery/customer/previous-orders/${this.id}`);
     }
 
+    //deliverer
+
     getNewOrders(){
-        return this.http.get<Array<Order>>(`${this.baseUrl}/deliverer/new-orders/${this.id}`);
+        return this.http.get<Array<Order>>(`${this.baseUrl}/delivery/deliverer/new-orders/${this.id}`);
     }
 
     getDelivererOrders(){
-        return this.http.get<Array<Order>>(`${this.baseUrl}/deliverer/previous-orders/${this.id}`);
+        return this.http.get<Array<Order>>(`${this.baseUrl}/delivery/deliverer/previous-orders/${this.id}`);
     }
 
     getCurrentOrderDeliverer(){
-        return this.http.get<Order>(`${this.baseUrl}/deliverer/current-order/${this.id}`);
+        return this.http.get<Order>(`${this.baseUrl}/delivery/deliverer/current-order/${this.id}`);
     }
 
     confirmOrder(orderId: string){
         return this.http.get(`${this.baseUrl}/deliverer/confirm-order/${this.id}/${orderId}`);
     }
 
+    //admin
     getAllDeliveres(){
-        return this.http.get<Array<RegisterModel>>(`${this.baseUrl}/admin/all-deliverers`);
-    }
-
-    addArticle(article: Article){
-        return this.http.post(`${this.baseUrl}/admin/add-article`, article);
+        return this.http.get<Array<RegisterModel>>(`${this.baseUrl}/users/admin/all-deliverers`);
     }
 
     changeStatus(id : string, status: string){
-        return this.http.get(`${this.baseUrl}/admin/change-state/${id}/${status}`);
+        return this.http.get(`${this.baseUrl}/users/admin/change-state/${id}/${status}`);
+    }
+
+    addArticle(article: Article){
+        return this.http.post(`${this.baseUrl}/delivery/admin/add-article`, article);
     }
 
     getAllOrders(){
-        return this.http.get<Array<Order>>(`${this.baseUrl}/admin/all-orders`);
+        return this.http.get<Array<Order>>(`${this.baseUrl}/delivery/admin/all-orders`);
     }
 
 

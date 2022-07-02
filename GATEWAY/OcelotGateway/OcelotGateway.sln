@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32428.217
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserApi", "..\UserApi\UserApi.csproj", "{2CC0F4EE-A60C-48BA-9698-BBF36940D0DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserApi", "..\UserApi\UserApi.csproj", "{2CC0F4EE-A60C-48BA-9698-BBF36940D0DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayApi", "..\GatewayApi\GatewayApi.csproj", "{FC92D796-AE1F-4258-A20E-950EE6F7C2E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GatewayApi", "..\GatewayApi\GatewayApi.csproj", "{FC92D796-AE1F-4258-A20E-950EE6F7C2E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliveryApi", "DeliveryApi\DeliveryApi.csproj", "{E259A137-941A-461E-862D-0C8891D30C09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{FC92D796-AE1F-4258-A20E-950EE6F7C2E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC92D796-AE1F-4258-A20E-950EE6F7C2E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC92D796-AE1F-4258-A20E-950EE6F7C2E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E259A137-941A-461E-862D-0C8891D30C09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E259A137-941A-461E-862D-0C8891D30C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E259A137-941A-461E-862D-0C8891D30C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E259A137-941A-461E-862D-0C8891D30C09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

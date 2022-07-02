@@ -17,6 +17,7 @@ namespace GatewayApi
 {
     public class Startup
     {
+        private readonly string _cors = "cors";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -34,6 +35,16 @@ namespace GatewayApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GatewayApi", Version = "v1" });
             });*/
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: _cors, builder => {
+                    builder.WithOrigins("http://localhost:4200")//Ovde navodimo koje sve aplikacije smeju kontaktirati nasu,u ovom slucaju nas Angular front
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials();
+                });
+            });
+
             services.AddOcelot(Configuration);
             services.AddSwaggerForOcelot(Configuration);
 
@@ -49,7 +60,9 @@ namespace GatewayApi
                 //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GatewayApi v1"));
             }
 
-            
+            app.UseHttpsRedirection();
+
+            app.UseCors(_cors);
 
             /*app.UseSwaggerForOcelotUI(opt =>
             {

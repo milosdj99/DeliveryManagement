@@ -607,7 +607,7 @@ namespace Milos_Djukic_PR_21_2018.Services
                     break;
                 case "HOLD":
                     statee = "NA CEKANJU";
-                    break;               
+                    break;
             }
 
             try
@@ -627,10 +627,13 @@ namespace Milos_Djukic_PR_21_2018.Services
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.Send(message);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 string ee = e.Message;
             }
 
         }
+
+
     }
 }

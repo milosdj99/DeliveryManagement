@@ -26,7 +26,7 @@ namespace Milos_Djukic_PR_21_2018.Infrastructure.Configurations
                 .HasForeignKey(sc => sc.OrderId);
 
 
-        }
+            }
         }
     
 }

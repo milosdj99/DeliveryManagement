@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/getff",
+      "DownstreamPathTemplate": "/api/users/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,9 +9,22 @@
           "Port": 31210
         }
       ],
-      "UpstreamPathTemplate": "/ff",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "/api/users/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
       "SwaggerKey": "users"
+    },
+    {
+      "DownstreamPathTemplate": "/api/delivery/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 23170
+        }
+      ],
+      "UpstreamPathTemplate": "/api/delivery/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "SwaggerKey": "delivery"
     }
   ],
   "GlobalConfiguration": {
@@ -27,6 +40,16 @@
           "Url": "http://localhost:31210/swagger/v1/swagger.json"
         }
       ]
-    }
+    },
+    {
+      "Key": "delivery",
+      "Config": [
+        {
+          "Name": "Delivery API",
+          "Version": "v1",
+          "Url": "http://localhost:23170/swagger/v1/swagger.json"
+        }
+      ]
+    
   ]
 }
