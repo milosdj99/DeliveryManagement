@@ -35,6 +35,10 @@ export class ApiService{
         return this.http.put<string>(`${this.baseUrl}/users/change-picture/${id}`, picture);
     }
 
+    getPicture(){
+        return this.http.get<TokenModel>(`${this.baseUrl}/users/picture/${this.id}`);
+    }
+
     facebookLogin(user: RegisterModel){
         return this.http.post<TokenModel>(`${this.baseUrl}/users/facebook-login`, user);
     }

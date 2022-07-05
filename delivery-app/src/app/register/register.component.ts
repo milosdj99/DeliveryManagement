@@ -65,9 +65,15 @@ export class RegisterComponent implements OnInit {
             this.formGroupRegister.get('type')?.patchValue(data.type);
             //this.imageUrl = " http://localhost:44312/" +  data.imageUrl.replace('\').replace('/');
 
-            //this.imageUrl = "https://localhost:44312/" +  data.imageUrl;
+            this.api.getPicture().subscribe(
+              data => {
+                    this.imageUrl = 'data:image/jpeg;base64, ' +  data.value;
+                    //this.imageUrl = data.value;
+              }
+            )
+            //this.imageUrl = 'data:image/jpeg;base64, ' + "https://localhost:44312/api/" +  data.imageUrl;
 
-            this.imageUrl = "https://localhost:44312/api/" + "Resources/Images/Capture.PNG";
+            //this.imageUrl = "https://localhost:44312/api/" + "Resources/Images/Capture.PNG";
 
             //document.getElementById("slika")?.setAttribute("src", `https://localhost:44312/${data.imageUrl}`);
                 }

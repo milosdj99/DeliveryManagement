@@ -56,7 +56,7 @@ namespace UserApi.Controllers
             if (userNew != null)
             {
                 //return CreatedAtAction(nameof(GetUserById), new { id = userNew.Id }, userNew);
-                return Ok();
+                return Ok(userNew);
 
             }
             else
@@ -100,6 +100,16 @@ namespace UserApi.Controllers
             }
 
            
+        }
+
+        [HttpGet("picture/{id}")]
+        public IActionResult GetPicture([FromRoute] Guid id)
+        {
+            TokenModel t = new TokenModel()
+            {
+                Value = _service.GetPicture(id)
+            };
+            return Ok(t);
         }
 
         [HttpPost("facebook-login")]

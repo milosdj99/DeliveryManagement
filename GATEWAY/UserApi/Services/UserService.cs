@@ -174,7 +174,7 @@ namespace UserApi
 
             var path = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
-            if (file.Length > 0)
+            if (file.Length <= 0)
             {
                 return false;
             }
@@ -193,7 +193,7 @@ namespace UserApi
             if (_context.Admins.Where(x => x.Id == id).FirstOrDefault() != null)
             {
                 var user = _context.Admins.Where(x => x.Id == id).FirstOrDefault();
-                user.ImageUrl = path;
+                user.ImageUrl = dbPath;
                 _context.SaveChanges();
 
                 return true;
@@ -201,7 +201,7 @@ namespace UserApi
             else if (_context.Deliverers.Where(x => x.Id == id).FirstOrDefault() != null)
             {
                 var user = _context.Deliverers.Where(x => x.Id == id).FirstOrDefault();
-                user.ImageUrl = path;
+                user.ImageUrl = dbPath;
                 _context.SaveChanges();
 
                 return true;
@@ -210,7 +210,7 @@ namespace UserApi
             else if (_context.Customers.Where(x => x.Id == id).FirstOrDefault() != null)
             {
                 var user = _context.Customers.Where(x => x.Id == id).FirstOrDefault();
-                user.ImageUrl = path;
+                user.ImageUrl = dbPath;
                 _context.SaveChanges();
 
                 return true;
@@ -225,6 +225,17 @@ namespace UserApi
         }
 
 
+        public string GetPicture(Guid id)
+        {
+            UserRegisterDto user = GetUserById(id);
+
+            byte[] byteArrImg = File.ReadAllBytes(user.ImageUrl);
+            string base64Img = Convert.ToBase64String(byteArrImg);
+
+            return base64Img;
+        }
+
+
         public bool ModifyUser(Guid id, UserRegisterDto newUser)
         {
 
@@ -233,7 +244,12 @@ namespace UserApi
                 return false;
             }
 
-            var user = _context.Admins.Where(x => x.Id == newUser.Id).FirstOrDefault();
+            if (_context.Deliverers.Where(x => x.Email == newUser.Email && x.Id != id).FirstOrDefault() != null || _context.Customers.Where(x => x.Email == newUser.Email && x.Id != id).FirstOrDefault() != null || _context.Admins.Where(x => x.Email == newUser.Email && x.Id != id).FirstOrDefault() != null)
+            {
+                return false;
+            }
+
+            var user = _context.Admins.Where(x => x.Id == id).FirstOrDefault();
 
             if (user != null)
             {
@@ -243,14 +259,13 @@ namespace UserApi
                 user.DateOfBirth = newUser.DateOfBirth;
                 user.Address = newUser.Address;
                 user.Email = newUser.Email;
-                user.ImageUrl = newUser.ImageUrl;
 
                 _context.SaveChanges();
 
             }
             else
             {
-                var user1 = _context.Deliverers.Where(x => x.Id == newUser.Id).FirstOrDefault();
+                var user1 = _context.Deliverers.Where(x => x.Id == id).FirstOrDefault();
 
                 if (user1 != null)
                 {
@@ -260,8 +275,7 @@ namespace UserApi
                     user1.DateOfBirth = newUser.DateOfBirth;
                     user1.Address = newUser.Address;
                     user1.Email = newUser.Email;
-                    user1.ImageUrl = newUser.ImageUrl;
-                    user1.State = "HOLD";
+                    
 
                     _context.SaveChanges();
 
@@ -269,7 +283,7 @@ namespace UserApi
                 else
                 {
 
-                    var user2 = _context.Deliverers.Where(x => x.Id == newUser.Id).FirstOrDefault();
+                    var user2 = _context.Customers.Where(x => x.Id == id).FirstOrDefault();
 
                     user2.Username = newUser.Username;
                     user2.Name = newUser.Name;
@@ -277,7 +291,6 @@ namespace UserApi
                     user2.DateOfBirth = newUser.DateOfBirth;
                     user2.Address = newUser.Address;
                     user2.Email = newUser.Email;
-                    user2.ImageUrl = newUser.ImageUrl;
 
                     _context.SaveChanges();
                 }
@@ -327,14 +340,19 @@ namespace UserApi
             return tokenString;
         }
 
+
+
+
         public UserRegisterDto GetUserById(Guid id)
         {
             var user = new UserRegisterDto();
             var deliverer = new Deliverer();
             var customer = new Customer();
+            var admin = new Admin();
 
             deliverer = _context.Deliverers.Where(x => x.Id == id).FirstOrDefault();
             customer = _context.Customers.Where(x => x.Id == id).FirstOrDefault();
+            admin = _context.Admins.Where(x => x.Id == id).FirstOrDefault();
 
             if (deliverer != null)
             {
@@ -345,6 +363,12 @@ namespace UserApi
             {
                 
                 user = _mapper.Map<UserRegisterDto>(customer);
+                return user;
+            }
+            else if (admin != null)
+            {
+
+                user = _mapper.Map<UserRegisterDto>(admin);
                 return user;
             }
             else
@@ -421,6 +445,45 @@ namespace UserApi
                 string ee = e.Message;
             }
 
+        }
+
+        #endregion
+
+
+        #region Helper
+
+        public UserRegisterDto GetUserByEmail(string email)
+        {
+            var user = new UserRegisterDto();
+            var deliverer = new Deliverer();
+            var customer = new Customer();
+            var admin = new Admin();
+
+            deliverer = _context.Deliverers.Where(x => x.Email == email).FirstOrDefault();
+            customer = _context.Customers.Where(x => x.Email == email).FirstOrDefault();
+            admin = _context.Admins.Where(x => x.Email == email).FirstOrDefault();
+
+            if (deliverer != null)
+            {
+                user = _mapper.Map<UserRegisterDto>(deliverer);
+                return user;
+            }
+            else if (customer != null)
+            {
+
+                user = _mapper.Map<UserRegisterDto>(customer);
+                return user;
+            }
+            else if (admin != null)
+            {
+
+                user = _mapper.Map<UserRegisterDto>(admin);
+                return user;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         #endregion
