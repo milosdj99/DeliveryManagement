@@ -31,10 +31,11 @@ export class OrderComponent implements OnInit {
   }
 
   get time(){
-    const format = 'yyyy-MM-dd';
+    const format = 'yyyy-MM-dd : ';
     const locale = 'en-US';
 
     return formatDate(this.order.time, format, locale);
+    
   }
 
 }

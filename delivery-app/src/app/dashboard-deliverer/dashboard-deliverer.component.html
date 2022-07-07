@@ -30,7 +30,7 @@
       <li type="none" *ngFor="let o of orders">
         <div style="margin: 30px;">
           <app-order-component [order] = 'o'></app-order-component>
-          <button style="float: left;" *ngIf="this.newOrders" (click)="confirmOrder(o)">Potvrdi podrudzbinu</button>
+          <button style="float: right; border-radius: 15px; margin-top: 10px; border: none" *ngIf="this.newOrders" (click)="confirmOrder(o)"><b>Potvrdi porudžbinu</b></button>
         </div>
       </li>
   </ul>
