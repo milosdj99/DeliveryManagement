@@ -20,7 +20,10 @@ export class AddArticleComponent implements OnInit {
   });
 
   requiredError = false;
+  apiError = false;
   successfulAdd = false;
+  numberError = false;
+  
 
   ngOnInit(): void {
   }
@@ -29,6 +32,13 @@ export class AddArticleComponent implements OnInit {
 
     this.requiredError = false;
     this.successfulAdd = false;
+    this.apiError = false;
+    this.numberError = false;
+
+    if(this.formGroupAddArticle.get('price')?.value < 1){
+      this.numberError = true;
+      return;
+    }
 
     if(this.formGroupAddArticle.get('name')?.errors?['required']:"" || this.formGroupAddArticle.get('price')?.errors?['required']:"" || this.formGroupAddArticle.get('ingredients')?.errors?['required']:""){
         this.requiredError = true;
@@ -40,6 +50,7 @@ export class AddArticleComponent implements OnInit {
       let pricee = this.formGroupAddArticle.get('price')?.value;
       let ingredientss = this.formGroupAddArticle.get('ingredients')?.value;
 
+
       let a = new Article();
       a.id = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
       a.name = namee,
@@ -49,6 +60,9 @@ export class AddArticleComponent implements OnInit {
       this.api.addArticle(a).subscribe(
         data => {
           this.successfulAdd = true;
+        },
+        error => {
+          this.apiError = true;
         }
       );
       
@@ -60,6 +74,11 @@ export class AddArticleComponent implements OnInit {
     localStorage.removeItem('token');
 
     this.router.navigateByUrl("/login");
+  }
+
+  dashboard(){
+    this.router.navigateByUrl("/dashboard/admin");
+
   }
 
 }

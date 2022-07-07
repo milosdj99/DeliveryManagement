@@ -1,0 +1,10 @@
+.navlink {
+    background-color:darkslategray; 
+    color: white; 
+    font-weight: bold;
+    border-radius: 25px;
+    width: fit-content;
+    white-space: nowrap;
+    margin: 10px 0px;
+
+}

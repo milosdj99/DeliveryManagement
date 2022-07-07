@@ -35,8 +35,8 @@ export class ApiService{
         return this.http.put<string>(`${this.baseUrl}/users/change-picture/${id}`, picture);
     }
 
-    getPicture(){
-        return this.http.get<TokenModel>(`${this.baseUrl}/users/picture/${this.id}`);
+    getPicture(id : string){
+        return this.http.get<TokenModel>(`${this.baseUrl}/users/picture/${id}`);
     }
 
     facebookLogin(user: RegisterModel){
@@ -85,7 +85,7 @@ export class ApiService{
     }
 
     confirmOrder(orderId: string){
-        return this.http.get(`${this.baseUrl}/deliverer/confirm-order/${this.id}/${orderId}`);
+        return this.http.get(`${this.baseUrl}/delivery/deliverer/confirm-order/${this.id}/${orderId}`);
     }
 
     //admin

@@ -1,13 +1,26 @@
-<div style=" width: 20rem; background-color:lightgreen;" class="card" >
+<div style=" width: 20rem; background-color:lightgreen; margin: 20px;" class="card" >
     <div class="card-body">
       <h5 class="card" style="background-color: white; text-align: center;">{{article.name}}</h5>
       <p class="card" style="background-color: white; text-align: center;"><b>{{article.price}} DIN</b></p>
+    
+      <div class="card">
+        <ul>
+          <li *ngFor="let ing of ingredients">{{ing}}</li>
+        </ul>
+      </div>
+
+      <div class=" card" style="margin: 10px;">
+
+        <tr>
+          <td>Količina: </td>
+          <td><input style="border-radius: 20px; position:relative; left : 18px" type="number" value="1" min="1" #amount></td>
+        </tr>
+        
+      </div>
+
+      <div style="width:fit-content; position: relative; left: 100px; margin-top: 20px;">
+        <button style=" width:100px; border-radius: 25px;" (click) = "emitArticle(amount.value)">Dodaj</button>
+      </div>
+      
     </div>
-    <ul *ngFor="let ing of ingredients" >
-      <li style="background-color: white; width: auto;
-      height: auto;
-      margin: 0 auto;
-      padding: 10px;
-      position: relative;" type="bullet" class="card gx-5">{{ing}}</li>
-    </ul>
-  </div>
+</div>

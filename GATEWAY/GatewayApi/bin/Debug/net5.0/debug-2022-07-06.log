@@ -1,0 +1,46 @@
+2022-07-06 23:11:39.5230||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2022-07-06 23:11:39.6420||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2022-07-06 23:11:39.6545||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\4_GOD\SEMESTAR 2\WEB 2\Milos_Djukic_PUSGS\DeliveryManagement\GATEWAY\GatewayApi 
+2022-07-06 23:11:39.6420||WARN|Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware|Failed to determine the https port for redirect. 
+2022-07-06 23:11:40.5991||INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request GET http://localhost:31210/swagger/v1/swagger.json 
+2022-07-06 23:11:40.6044||INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request GET http://localhost:31210/swagger/v1/swagger.json 
+2022-07-06 23:11:41.0227||INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 412.9385ms - 200 
+2022-07-06 23:11:41.0257||INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 434.0108ms - 200 
+2022-07-06 23:11:44.5456||INFO|Ocelot.RateLimit.Middleware.ClientRateLimitMiddleware|requestId: 80000009-0000-fe00-b63f-84710c7967bb, previousRequestId: no previous request id, message: EndpointRateLimiting is not enabled for /api/users/{everything} 
+2022-07-06 23:11:44.5456||INFO|Ocelot.Authentication.Middleware.AuthenticationMiddleware|requestId: 80000009-0000-fe00-b63f-84710c7967bb, previousRequestId: no previous request id, message: No authentication needed for /api/users/login 
+2022-07-06 23:11:44.5573||INFO|Ocelot.Authorization.Middleware.AuthorizationMiddleware|requestId: 80000009-0000-fe00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /api/users/{everything} route does not require user to be authorized 
+2022-07-06 23:11:57.5273||INFO|Ocelot.Requester.Middleware.HttpRequesterMiddleware|requestId: 80000009-0000-fe00-b63f-84710c7967bb, previousRequestId: no previous request id, message: 200 (OK) status code, request uri: http://localhost:31210/api/users/login 
+2022-07-06 23:11:57.6093||INFO|Ocelot.RateLimit.Middleware.ClientRateLimitMiddleware|requestId: 8000000b-0000-fe00-b63f-84710c7967bb, previousRequestId: no previous request id, message: EndpointRateLimiting is not enabled for /api/delivery/{everything} 
+2022-07-06 23:11:57.6093||INFO|Ocelot.Authentication.Middleware.AuthenticationMiddleware|requestId: 8000000b-0000-fe00-b63f-84710c7967bb, previousRequestId: no previous request id, message: No authentication needed for /api/delivery/articles 
+2022-07-06 23:11:57.6093||INFO|Ocelot.Authorization.Middleware.AuthorizationMiddleware|requestId: 8000000b-0000-fe00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /api/delivery/{everything} route does not require user to be authorized 
+2022-07-06 23:12:02.1703||INFO|Ocelot.Requester.Middleware.HttpRequesterMiddleware|requestId: 8000000b-0000-fe00-b63f-84710c7967bb, previousRequestId: no previous request id, message: 200 (OK) status code, request uri: http://localhost:23170/api/delivery/articles 
+2022-07-06 23:30:49.5385||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2022-07-06 23:30:50.1473||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2022-07-06 23:30:50.1520||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\4_GOD\SEMESTAR 2\WEB 2\Milos_Djukic_PUSGS\DeliveryManagement\GATEWAY\GatewayApi 
+2022-07-06 23:30:50.1520||WARN|Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware|Failed to determine the https port for redirect. 
+2022-07-06 23:30:51.3363||INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request GET http://localhost:31210/swagger/v1/swagger.json 
+2022-07-06 23:30:51.3363||INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request GET http://localhost:31210/swagger/v1/swagger.json 
+2022-07-06 23:30:52.5266||INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 1160.9608ms - 200 
+2022-07-06 23:30:52.5266||INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 1203.7319ms - 200 
+2022-07-06 23:31:09.8735||INFO|Ocelot.RateLimit.Middleware.ClientRateLimitMiddleware|requestId: 80000009-0000-fd00-b63f-84710c7967bb, previousRequestId: no previous request id, message: EndpointRateLimiting is not enabled for /api/users/{everything} 
+2022-07-06 23:31:09.8735||INFO|Ocelot.Authentication.Middleware.AuthenticationMiddleware|requestId: 80000009-0000-fd00-b63f-84710c7967bb, previousRequestId: no previous request id, message: No authentication needed for /api/users/login 
+2022-07-06 23:31:09.8865||INFO|Ocelot.Authorization.Middleware.AuthorizationMiddleware|requestId: 80000009-0000-fd00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /api/users/{everything} route does not require user to be authorized 
+2022-07-06 23:31:12.3857||INFO|Ocelot.RateLimit.Middleware.ClientRateLimitMiddleware|requestId: 80000003-0000-fc00-b63f-84710c7967bb, previousRequestId: no previous request id, message: EndpointRateLimiting is not enabled for /api/users/{everything} 
+2022-07-06 23:31:12.3857||INFO|Ocelot.Authentication.Middleware.AuthenticationMiddleware|requestId: 80000003-0000-fc00-b63f-84710c7967bb, previousRequestId: no previous request id, message: No authentication needed for /api/users/login 
+2022-07-06 23:31:12.3857||INFO|Ocelot.Authorization.Middleware.AuthorizationMiddleware|requestId: 80000003-0000-fc00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /api/users/{everything} route does not require user to be authorized 
+2022-07-06 23:32:11.3010||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2022-07-06 23:32:11.3764||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2022-07-06 23:32:11.3937||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\4_GOD\SEMESTAR 2\WEB 2\Milos_Djukic_PUSGS\DeliveryManagement\GATEWAY\GatewayApi 
+2022-07-06 23:32:11.4083||WARN|Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware|Failed to determine the https port for redirect. 
+2022-07-06 23:32:12.6087||INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request GET http://localhost:31210/swagger/v1/swagger.json 
+2022-07-06 23:32:12.6087||INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request GET http://localhost:31210/swagger/v1/swagger.json 
+2022-07-06 23:32:12.8826||INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 263.751ms - 200 
+2022-07-06 23:32:12.8858||INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 288.8905ms - 200 
+2022-07-06 23:32:13.8513||INFO|Ocelot.RateLimit.Middleware.ClientRateLimitMiddleware|requestId: 8000000b-0003-fd00-b63f-84710c7967bb, previousRequestId: no previous request id, message: EndpointRateLimiting is not enabled for /api/users/{everything} 
+2022-07-06 23:32:13.8618||INFO|Ocelot.Authentication.Middleware.AuthenticationMiddleware|requestId: 8000000b-0003-fd00-b63f-84710c7967bb, previousRequestId: no previous request id, message: No authentication needed for /api/users/login 
+2022-07-06 23:32:13.8618||INFO|Ocelot.Authorization.Middleware.AuthorizationMiddleware|requestId: 8000000b-0003-fd00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /api/users/{everything} route does not require user to be authorized 
+2022-07-06 23:32:17.8949||INFO|Ocelot.Requester.Middleware.HttpRequesterMiddleware|requestId: 8000000b-0003-fd00-b63f-84710c7967bb, previousRequestId: no previous request id, message: 200 (OK) status code, request uri: http://localhost:31210/api/users/login 
+2022-07-06 23:32:18.1192||INFO|Ocelot.RateLimit.Middleware.ClientRateLimitMiddleware|requestId: 8000000d-0003-fd00-b63f-84710c7967bb, previousRequestId: no previous request id, message: EndpointRateLimiting is not enabled for /api/delivery/{everything} 
+2022-07-06 23:32:18.1192||INFO|Ocelot.Authentication.Middleware.AuthenticationMiddleware|requestId: 8000000d-0003-fd00-b63f-84710c7967bb, previousRequestId: no previous request id, message: No authentication needed for /api/delivery/articles 
+2022-07-06 23:32:18.1192||INFO|Ocelot.Authorization.Middleware.AuthorizationMiddleware|requestId: 8000000d-0003-fd00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /api/delivery/{everything} route does not require user to be authorized 
+2022-07-06 23:32:22.0107||INFO|Ocelot.Requester.Middleware.HttpRequesterMiddleware|requestId: 8000000d-0003-fd00-b63f-84710c7967bb, previousRequestId: no previous request id, message: 200 (OK) status code, request uri: http://localhost:23170/api/delivery/articles 

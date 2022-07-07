@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" style="width: fit-content; margin: 20px;">
     <table class="table">
         <thead>
           <tr>
@@ -9,6 +9,7 @@
             <th scope="col">Datum rodjenja</th>
             <th scope="col">Adresa</th>
             <th scope="col">Slika</th>
+            <th scope="col">Stanje</th>
           </tr>
         </thead>
         <tbody>
@@ -17,16 +18,24 @@
             <td>{{user.email}}</td>
             <td>{{user.name}}</td>
             <td>{{user.surname}}</td>
-            <td>{{user.dateOfBirth}}</td>
+            <td>{{renderDate(user.dateOfBirth)}}</td>
             <td>{{user.address}}</td>
-            <td>{{user.imageUrl}}</td>
+            <td><img style="width: 100px; height: 100px;" id="slika" [src] = sanitizeImageUrl(imageUrl)/></td>
             <td>
-                <input id="id1" type="radio" [checked]="user.state=='APPROVED'" (click)="changeStatus('APPROVED')" value="Prihvacen" [name]=user.username/>
-                <label>Prihvacen</label>
-                <input id="id2" type="radio" [checked]="user.state=='HOLD'" (click)="changeStatus('HOLD')" value="Na cekanju" [name]=user.username/>
-                <label >Na cekanju</label>
-                <input id="id3" type="radio" [checked]="user.state=='DENIED'" (click)="changeStatus('DENIED')" value="Odbijen" [name]=user.username/>  
-                <label>Odbijen</label>            
+              <div>
+                  <input style="border: 5px;" id="id1" type="radio" [checked]="user.state=='APPROVED'" (click)="changeStatus('APPROVED')" value="Prihvacen" [name]=user.username/>
+                  <label>Prihvacen</label>
+              </div>
+              <div>
+                  <input id="id2" type="radio" [checked]="user.state=='HOLD'" (click)="changeStatus('HOLD')" value="Na cekanju" [name]=user.username/>
+                  <label >Na cekanju</label>
+              </div>
+              <div>
+                  <input id="id3" type="radio" [checked]="user.state=='DENIED'" (click)="changeStatus('DENIED')" value="Odbijen" [name]=user.username/>  
+                  <label>Odbijen</label> 
+              </div>
+                
+                           
             </td>
             
           </tr>          

@@ -27,6 +27,8 @@ namespace GatewayApi
 
                     config.AddJsonFile("ocelot.json");
 
+                }).ConfigureLogging(logging => {
+                    logging.AddConsole();
                 });
     }
 }

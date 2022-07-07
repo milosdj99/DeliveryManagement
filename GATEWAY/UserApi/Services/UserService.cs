@@ -47,6 +47,7 @@ namespace UserApi
             {
                 return null;
             }
+           
 
             if (userFromFront.Type == "Deliverer")
             {
@@ -72,7 +73,7 @@ namespace UserApi
                 return _mapper.Map<UserRegisterDto>(user);
 
 
-            }
+            } 
         }
 
 
@@ -152,7 +153,7 @@ namespace UserApi
                 SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokeOptions = new JwtSecurityToken(
-                    issuer: "http://localhost:44312",
+                    issuer: "http://localhost:31210",
                     claims: claims,
                     expires: DateTime.Now.AddMinutes(20),
                     signingCredentials: signinCredentials
@@ -229,10 +230,16 @@ namespace UserApi
         {
             UserRegisterDto user = GetUserById(id);
 
-            byte[] byteArrImg = File.ReadAllBytes(user.ImageUrl);
-            string base64Img = Convert.ToBase64String(byteArrImg);
+            if(user.ImageUrl == null)
+            {
+                return "";
 
-            return base64Img;
+            } else
+            {
+                byte[] byteArrImg = File.ReadAllBytes(user.ImageUrl);
+                return Convert.ToBase64String(byteArrImg);               
+            }
+           
         }
 
 
@@ -259,6 +266,7 @@ namespace UserApi
                 user.DateOfBirth = newUser.DateOfBirth;
                 user.Address = newUser.Address;
                 user.Email = newUser.Email;
+                user.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
 
                 _context.SaveChanges();
 
@@ -275,7 +283,8 @@ namespace UserApi
                     user1.DateOfBirth = newUser.DateOfBirth;
                     user1.Address = newUser.Address;
                     user1.Email = newUser.Email;
-                    
+                    user1.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
+
 
                     _context.SaveChanges();
 
@@ -291,6 +300,7 @@ namespace UserApi
                     user2.DateOfBirth = newUser.DateOfBirth;
                     user2.Address = newUser.Address;
                     user2.Email = newUser.Email;
+                    user2.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
 
                     _context.SaveChanges();
                 }
@@ -378,6 +388,8 @@ namespace UserApi
         }
 
         #region Admin
+
+
         public List<UserRegisterDto> GetAllDeliverers()
         {
             var deliverers = _context.Deliverers.ToList();

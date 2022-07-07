@@ -79,6 +79,7 @@ export class DashboardCustomerComponent implements OnInit {
     this.api.addOrder(order).subscribe(
       data => {
         this.apiError = false;
+        this.currentOrder();
       },
       error => {
         this.apiError = true;
@@ -89,9 +90,11 @@ export class DashboardCustomerComponent implements OnInit {
 
 
 
-  addArticle(articleName: string, amountt : string){
+  addArticle(article: string){
 
-    let amount = parseInt(amountt);
+
+    let articleName = article.split(',')[0];
+    let amount = parseInt(article.split(',')[1]);
 
     if(amount < 1){
       return;
@@ -111,17 +114,21 @@ export class DashboardCustomerComponent implements OnInit {
       this.basket.push(basketArticle);
     }
     
-    
+    this.price += basketArticle.price * basketArticle.amount;
+
   }
 
   removeArticle(article: Article){
     this.basket.splice(this.basket.indexOf(article), 1);
+    this.price -= article.price * article.amount;
   }
 
   myOrders(){
 
     this.showTimer = false;
+    this.showBasket = false;
     this.apiError = false;
+
 
     this.orders = [];
     this.articles = [];

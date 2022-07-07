@@ -1,39 +1,42 @@
-<div>
-  <button (click)="logOut()">Log out</button>
-</div>
 
 
-<nav class="navbar navbar-expand-lg navbar-light bg-dark">
-    <div class="container-fluid">
-      
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          
-          <li style="background-color: aquamarine;"  class="nav-item">
-            <a class="nav-link" aria-current="page" href="/register">Profil</a>
-          </li>
-          <li style="background-color: aquamarine;" class="nav-item">
-            <button (click)="newOrdersRedirect()" class="nav-link" >Nove porudzbine</button>
-          </li>
-          <li style="background-color: aquamarine;" class="nav-item">
-            <button (click)="previousOrders()" class="nav-link" >Prethodne porudzbine</button>
-          </li>
-          <li style="background-color: aquamarine;" class="nav-item">
-            <button (click)="currentOrder()" class="nav-link" >Trenutna porudzbina</button>
-          </li>
-        </ul>      
-      </div>
+
+  <div>
+    <button style="float:right" class="btn btn-lg navlink" (click)="logOut()">Izloguj se</button>
+  </div>
+
+  <div class="row" style="width: fit-content;">
+    <div class="col" >
+      <a class="btn btn-lg navlink" href="/register">Profil</a>
     </div>
-  </nav>
+    <div class="col" >
+      <button class="btn btn-lg navlink" (click)="newOrdersRedirect()">Nove porudzbine</button>
+    </div>
+    <div class="col" >
+      <button class="btn btn-lg navlink" (click)="previousOrders()">Prethodne porudzbine</button>
+    </div>
+    <div class="col" >
+      <button class="btn btn-lg navlink" (click)="currentOrder()">Trenutna porudzbina</button>
+    </div>
+    
+  </div>
 
   <div *ngIf="apiError == true" class="alert alert-danger" role="alert">
     Vec imate dostavu u toku!
 </div>
 
+  <!--orders-->
   <ul>
-      <li *ngFor="let o of orders">
-        <app-order-component [order] = 'o'></app-order-component>
-        <button *ngIf="this.newOrders" (click)="confirmOrder(o)"></button>
+      <li type="none" *ngFor="let o of orders">
+        <div style="margin: 30px;">
+          <app-order-component [order] = 'o'></app-order-component>
+          <button style="float: left;" *ngIf="this.newOrders" (click)="confirmOrder(o)">Potvrdi podrudzbinu</button>
+        </div>
       </li>
   </ul>
 
+
+<!--timer-->
+<div class="card timer" *ngIf="showTimer">
+  <h6><b style="font-size: x-large;">Vreme do dostave : {{deliveryMinutes}} : {{deliverySeconds}}</b></h6>
+</div>

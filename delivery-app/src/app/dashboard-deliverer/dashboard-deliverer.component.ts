@@ -26,6 +26,8 @@ export class DashboardDelivererComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.showTimer = false;
+
     this.apiError = false;
 
     this.newOrders = true;
@@ -54,6 +56,8 @@ export class DashboardDelivererComponent implements OnInit {
 
   previousOrders(){
 
+    this.showTimer = false;
+
     this.newOrders = false;
 
     this.apiError = false;
@@ -76,7 +80,10 @@ export class DashboardDelivererComponent implements OnInit {
 
     this.api.getCurrentOrderDeliverer().subscribe(
       data => {
-        let order : Order = data;
+        if(data == null){
+          return;
+        }
+            let order : Order = data;
             let currentTime = new Date();
             
             order.time = new Date(order.time);
@@ -92,14 +99,16 @@ export class DashboardDelivererComponent implements OnInit {
 
             this.orders.push(data);
 
-            if(order.accepted == true){
+            
               this.showTimer = true;
-            }
+            
       }
     );
   }
 
   newOrdersRedirect(){
+
+    this.showTimer = false;
 
     this.apiError = false;
 

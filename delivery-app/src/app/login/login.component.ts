@@ -54,7 +54,6 @@ export class LoginComponent implements OnInit {
         fuser.name = data.name;
         fuser.surname = data.lastName;
         fuser.email = data.email;
-        fuser.imageUrl = data.photoUrl;
         fuser.id = "3DAE2E51-4DC8-4108-360F-08DA4FEA0904";
     
         this.api.facebookLogin(fuser).subscribe(

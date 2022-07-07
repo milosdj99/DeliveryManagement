@@ -19,6 +19,7 @@ import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.compo
 import { DelivererComponent } from './deliverer/deliverer.component';
 import { AddArticleComponent } from './add-article/add-article.component';
 import { FacebookLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 'angularx-social-login';
+import { DatePipe } from '@angular/common';
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,7 +62,8 @@ import { FacebookLoginProvider, SocialAuthServiceConfig, SocialLoginModule } fro
               )
             }
           ]
-        } as SocialAuthServiceConfig}],
+        } as SocialAuthServiceConfig},
+      DatePipe],
       
   bootstrap: [AppComponent]
 })

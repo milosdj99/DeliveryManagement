@@ -8,6 +8,7 @@ import { ApiService } from '../services/api-service';
 import  jwt_decode from 'jwt-decode';
 import { JSDocComment } from '@angular/compiler';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 })
 export class RegisterComponent implements OnInit {
 
-  selectedImage: File;
+  selectedImage: File = null;
 
   successfulChange = false;
   requiredError = false;
@@ -59,29 +60,37 @@ export class RegisterComponent implements OnInit {
             this.formGroupRegister.get('email')?.patchValue(data.email);
             this.formGroupRegister.get('name')?.patchValue(data.name);
             this.formGroupRegister.get('surname')?.patchValue(data.surname);
-            this.formGroupRegister.get('dateOfBirth')?.patchValue(data.dateOfBirth.getDate);
-            this.formGroupRegister.get('address')?.patchValue(data.address);
-            //this.formGroupRegister.get('imageUrl')?.patchValue(data.imageUrl);
-            this.formGroupRegister.get('type')?.patchValue(data.type);
-            //this.imageUrl = " http://localhost:44312/" +  data.imageUrl.replace('\').replace('/');
 
-            this.api.getPicture().subscribe(
+            const format = 'yyyy-MM-dd';
+            const locale = 'en-US';
+
+            this.formGroupRegister.get('dateOfBirth')?.patchValue(formatDate(data.dateOfBirth, format, locale));
+            this.formGroupRegister.get('address')?.patchValue(data.address);
+            this.formGroupRegister.get('password1')?.patchValue("");
+            this.formGroupRegister.get('password2')?.patchValue("");
+            
+                       
+            this.api.getPicture(localStorage.getItem('id')).subscribe(
               data => {
-                    this.imageUrl = 'data:image/jpeg;base64, ' +  data.value;
-                    //this.imageUrl = data.value;
+
+                    if(data.value == ""){
+                        this.imageUrl = "src/assets/images/blank.png";          
+                        
+                    } else {
+                        this.imageUrl = 'data:image/jpeg;base64, ' +  data.value; 
+                    }
+                                      
               }
             )
-            //this.imageUrl = 'data:image/jpeg;base64, ' + "https://localhost:44312/api/" +  data.imageUrl;
-
-            //this.imageUrl = "https://localhost:44312/api/" + "Resources/Images/Capture.PNG";
-
-            //document.getElementById("slika")?.setAttribute("src", `https://localhost:44312/${data.imageUrl}`);
-                }
+            
+          }
         )
       }
     
       
   }
+
+  
 
 
   submitRegister(){
@@ -115,6 +124,11 @@ export class RegisterComponent implements OnInit {
       this.emailError = true;
       return;
     }
+
+    if(this.selectedImage == null){
+      this.requiredError = true;
+        return;
+    }
    
 
       let model = new RegisterModel();
@@ -124,7 +138,7 @@ export class RegisterComponent implements OnInit {
       model.name = this.formGroupRegister.get('name')?.value;
       model.surname = this.formGroupRegister.get('surname')?.value;
       model.email = this.formGroupRegister.get('email')?.value;
-      model.dateOfBirth = new Date();
+      model.dateOfBirth = this.formGroupRegister.get('dateOfBirth').value;
       model.address = this.formGroupRegister.get('address')?.value;
       model.imageUrl = this.formGroupRegister.get('imageUrl')?.value;
       model.type = this.formGroupRegister.get('type')?.value;
@@ -183,6 +197,26 @@ export class RegisterComponent implements OnInit {
     localStorage.removeItem('token');
 
     this.router.navigateByUrl("/login");
+  }
+
+  dashboard(){
+    let role = localStorage.getItem('role');
+
+    if(role == 'admin'){
+
+      this.router.navigateByUrl('/dashboard/admin');
+
+    } else if(role == 'deliverer'){
+
+      this.router.navigateByUrl('/dashboard/deliverer');
+
+    }else if(role == 'customer'){
+
+      this.router.navigateByUrl('/dashboard/customer');
+
+    } else {
+      this.router.navigateByUrl('/login');
+    }
   }
 
 }

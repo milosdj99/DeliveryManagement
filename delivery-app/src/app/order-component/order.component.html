@@ -5,7 +5,7 @@
           <tr>
             <th scope="col">Adresa</th>
             <th scope="col">Komentar</th>
-            <th scope="col">Vreme</th>
+            <th *ngIf="order.accepted == true" scope="col">Vreme</th>
             <th scope="col">Prihvacena</th>
           </tr>
         </thead>
@@ -13,12 +13,18 @@
           <tr>
             <td>{{order.address}}</td>
             <td>{{order.comment}}</td>
-            <td>{{order.time}}</td>
+            <td *ngIf="order.accepted == true">{{order.time | date:"dd/MM/yyyy HH:mm:ss"}}</td>
             <td>{{order.accepted == true ? "Da" : "Ne"}}</td>
           </tr>
           <ul *ngFor="let a of order.articles">
               <li><b>{{a.name}} : {{a.price}} DIN</b></li>
           </ul>
+
+          <hr/>
+
+          <div style="position: relative; left: 100px;">
+              <b>Ukupno: {{price}} DIN</b>
+          </div>
           
         </tbody>
       </table>

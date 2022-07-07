@@ -1,95 +1,95 @@
+
+
 <div>
-  <button type="button" (click)="logOut()">Log out</button>
+  <button style="float:right" class="btn btn-lg navlink" (click)="logOut()">Izloguj se</button>
 </div>
 
-
-<nav class="navbar navbar-expand-lg navbar-light bg-dark">
-  <div class="container-fluid">
-    
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        
-        <li style="background-color: aquamarine;"  class="nav-item">
-          <a class="nav-link" aria-current="page" href="/register">Profil</a>
-        </li>
-        <li style="background-color: aquamarine;"  class="nav-item">
-          <button class="nav-link" aria-current="page" (click)="newOrder()">Nova porudzbina</button>
-        </li>
-        <li style="background-color: aquamarine;" class="nav-item">
-          <button class="nav-link" (click)="currentOrder()">Trenutna porudzbina</button>
-        </li>
-        <li style="background-color: aquamarine;" class="nav-item">
-          <button class="nav-link" (click)="myOrders()">Prethodne porudzbine</button>
-        </li>
-      </ul>      
-    </div>
+<div class="row" style="width: fit-content;">
+  <div class="col" >
+    <a class="btn btn-lg navlink" href="/register">Profil</a>
   </div>
-</nav>
+  <div class="col" >
+    <button class="btn btn-lg navlink" (click)="newOrder()">Nova porudzbina</button>
+  </div>
+  <div class="col" >
+    <button class="btn btn-lg navlink" (click)="currentOrder()">Trenutna porudzbina</button>
+  </div>
+  <div class="col" >
+    <button class="btn btn-lg navlink" (click)="myOrders()">Prethodne porudzbine</button>
+  </div>
+  
+</div>
 
 <div *ngIf="apiError==true" class="alert alert-danger" role="alert">
   Vec imate dostavu na cekanju!
 </div>
 
-<div *ngIf="showBasket" class="card" style="float: right;" >
+
+<!--korpa-->
+<div *ngIf="showBasket" class="card" style="float: right; margin-right: 30px;" >
   <div class="card-body">
-    <h5 class="card-title justify-content-center" >KORPA</h5>
-    <div class="card" *ngFor="let article of basket">
-      <div class="card-body">
-        <ul>
-          <li>{{article.name}} x{{article.amount}}: {{article.price*article.amount}} <button (click) = "removeArticle(article)">Obrisi</button></li>
-        </ul>
-        
+    <h5 style="text-align: center;" class="card-title justify-content-center" >KORPA</h5>
+    <div class="card" style="width:fit-content; height: fit-content; background-color: lightgreen; margin: 10px;" *ngFor="let article of basket">
+      <div class="card-body">           
+              {{article.name}} x{{article.amount}}: {{article.price*article.amount}} DIN
+              <button style="background-color: red;" (click) = "removeArticle(article)">X</button>        
       </div>
       
     </div>
+
+    <br/>
+
+      <div style="position: relative; left: 10px;">
+          <b>Ukupno: {{price}} DIN</b>
+      </div>
+      <br/>
+
     <form [formGroup]="formGroupOrder">
-      <div class="form-outline form-white mb-4">
+      <div style="text-align: center;" class="form-outline form-white mb-4">
           <input formControlName="address" type="text" id="typeAddressX"
               class="form-control form-control-lg" />
-          <label class="form-label" for="typeAddressX">Adresa</label>
+          <label class="form-label" for="typeAddressX"><b>Adresa</b>
+          </label>
       </div>
     
-      <div class="form-outline form-white mb-4">
+      <div style="text-align: center;" class="form-outline form-white mb-4">
           <input formControlName="comment" type="text" id="typeCommentX"
               class="form-control form-control-lg" />
-          <label class="form-label" for="typeCommentX">Komentar</label>
+          <label style="text-align: center;" class="form-label" for="typeCommentX"><b>Komentar</b></label>
       </div>
       
-      <button class="btn btn-lg px-5"  type="submit" [disabled]="basket.length==0 || !formGroupOrder.get('address')?.value"
-      (click)="submitOrder()">Naruči</button>
+      <div style="position: relative; left: 60px;">
+        <button class="btn btn-lg px-5"  type="submit" [disabled]="basket.length==0 || !formGroupOrder.get('address')?.value"
+        (click)="submitOrder()">Naruči</button>
+      </div>
+      
       
     </form>
   </div>
 
 </div>
 
+<!--artikli-->
 <div class="row">
   <div  class="column" style="width: fit-content; height: fit-content;" *ngFor="let art of articles" >   
-    <app-article [article]="art" ></app-article>
-    <div class="card">
-      <label>Količina:</label>
-      <input type="number" value="1" min="1" #amount>
-    </div>
-    <div class="card">
-      <button (click) = "addArticle(art.name, amount.value)">Dodaj</button>
-    </div>
+    <app-article [article]="art" (addEvent)="addArticle($event)" ></app-article>
   </div>
 </div>
 
 
 
-
-<div *ngFor="let o of orders">
+<!--orders-->
+<div *ngFor="let o of orders" style="margin: 30px;">
   <app-order-component [order] = 'o'></app-order-component>
     
 </div>
 
 
-<div class="card" *ngIf="showTimer">
-    <tr>
-      <td>Vreme do dostave:</td>
-      <td>{{deliveryMinutes}} : {{deliverySeconds}}</td>
-    </tr>
+
+<!--timer-->
+<div class="card timer" *ngIf="showTimer">
+  <h6><b style="font-size: x-large;">Vreme do dostave : {{deliveryMinutes}} : {{deliverySeconds}}</b></h6>
 </div>
+
 
 

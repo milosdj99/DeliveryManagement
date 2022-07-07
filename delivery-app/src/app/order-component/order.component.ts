@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Order } from '../models/DTO/order-model';
 import { ApiService } from '../services/api-service';
@@ -19,6 +20,21 @@ export class OrderComponent implements OnInit {
   ngOnInit(): void {
   
 
+  }
+
+  get price(){
+    let s = 0;
+    this.order.articles.forEach(x => {
+        s+= x.price;
+    });
+    return s;
+  }
+
+  get time(){
+    const format = 'yyyy-MM-dd';
+    const locale = 'en-US';
+
+    return formatDate(this.order.time, format, locale);
   }
 
 }

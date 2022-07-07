@@ -1,7 +1,11 @@
 <div *ngIf="isLoggedIn">
-    <button value="Log out" (click)="logOut()"></button>
+    <button style="float: left; background-color:darkslategray; color: white; font-weight: bold;" class="btn btn-lg" (click)="dashboard()">Nazad na dashboard</button>
+  </div>
+
+<div *ngIf="isLoggedIn">
+    <button style="float: right; background-color:darkslategray; color: white; font-weight: bold;" class="btn btn-lg" (click)="logOut()">Izloguj se</button>
 </div>
-{{isLoggedIn}}
+
 
 <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
@@ -15,6 +19,7 @@
 
                             <h2 *ngIf="!isLoggedIn" class="fw-bold mb-2 text-uppercase">Registracija</h2>
                             <h2 *ngIf="isLoggedIn" class="fw-bold mb-2 text-uppercase">Izmena podataka</h2>
+                            
                             <p class="text-white-50 mb-5">Molimo unesite svoje podatke!</p>
 
                             <div *ngIf="successfulChange" class="alert alert-success" role="alert">
@@ -33,81 +38,77 @@
                                 Lozinke se ne poklapaju!
                             </div>
 
+                                                     
+                            <div *ngIf="isLoggedIn" class="col">
+                                <img style="width: 100px; height: 100px; margin-bottom: 20px;" id="slika" [src] = sanitizeImageUrl(imageUrl)/>
+                            </div>
+
+
                             <form [formGroup]="formGroupRegister">
 
-                                <div>
-                                    <img style="width: 100px; height: 100px" id="slika" [src] = sanitizeImageUrl(imageUrl)/>
+                                <div class="form-outline form-white mb-4">
+                                    <input class="form-control form-control-lg" type="file" (change)="onPicChange($event)" placeholder="Promeni sliku..."/>
+                                    <label class="form-label">Slika</label>
                                 </div>
-                                
-                                <div>
-                                    <input type="file" (change)="onPicChange($event)" placeholder="Promeni sliku..."/>
-                                </div>
-                                
-                                
-
 
                                 <div class="form-outline form-white mb-4">
                                     <input formControlName="username" type="text" id="typeUsernameX"
                                         class="form-control form-control-lg" />
-                                    <label class="form-label" for="typeUsernameX">Username</label>
+                                    <label class="form-label">Username</label>
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
-                                    <input formControlName="name" type="text" id="typeNameX"
+                                    <input formControlName="name" type="text" id="typeNameeX"
                                         class="form-control form-control-lg" />
-                                    <label class="form-label" for="typeNameX">Ime</label>
+                                    <label class="form-label">Ime</label>
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
                                     <input formControlName="surname" type="text" id="typeSurnameX"
                                         class="form-control form-control-lg" />
-                                    <label class="form-label" for="typeSurnameX">Prezime</label>
+                                    <label class="form-label">Prezime</label>
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
                                     <input formControlName="dateOfBirth" type="date" id="typeNameX"
                                         class="form-control form-control-lg" />
-                                    <label class="form-label" for="typeNameX">Datum rodjenja: </label>
+                                    <label class="form-label">Datum rodjenja: </label>
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
                                     <input formControlName="email" type="email" id="typeEmailX"
                                         class="form-control form-control-lg" />
-                                    <label class="form-label" for="typeEmailX">Email</label>
+                                    <label class="form-label">Email</label>
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
                                     <input formControlName="address" type="text" id="typeAddressX"
                                         class="form-control form-control-lg" />
-                                    <label class="form-label" for="typeAddressX">Adresa</label>
+                                    <label class="form-label">Adresa</label>
                                 </div>
 
-                                <!--<div class="form-outline form-white mb-4">
-                                    <input formControlName="imageUrl" type="image" id="typePasswordX"
-                                        class="form-control form-control-lg" />
-                                    <label class="form-label" for="typePasswordX">Slika</label>
-                                </div>-->
+                                
 
-                                >
+                                
 
                                 <div *ngIf="!isLoggedIn">
-                                    <select formControlName="type" class="form-select" aria-label="Default select example">
+                                    <select formControlName="type" class="form-select">
                                         <option selected value="Customer">Kupac</option>
                                         <option value="Deliverer">Dostavljac</option>
                                     </select>
-                                    <label class="form-label" for="typePasswordX">Tip korisnika</label>
+                                    <label class="form-label">Tip korisnika</label>
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
-                                    <input formControlName="password1" type="password" id="typePasswordX"
+                                    <input formControlName="password1" type="password"
                                         class="form-control form-control-lg" />
-                                    <label class="form-label" for="typePasswordX">Lozinka</label>
+                                    <label class="form-label">Lozinka</label>
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
-                                    <input formControlName="password2" type="password" id="typePasswordX"
+                                    <input formControlName="password2" type="password"
                                         class="form-control form-control-lg" />
-                                    <label class="form-label" for="typePasswordX">Ponovite lozinku</label>
+                                    <label class="form-label">Ponovite lozinku</label>
                                 </div>
                             </form>
 
@@ -115,13 +116,7 @@
                                 (click)="submitRegister()">Registruj se</button>
 
                             <button *ngIf="isLoggedIn" class="btn btn-outline-light btn-lg px-5"  type="submit"
-                                (click)="submitRegister()">Promeni</button>
-
-                            <div class="d-flex justify-content-center text-center mt-4 pt-1">
-                                <a href="#!" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-                                <a href="#!" class="text-white"><i class="fab fa-twitter fa-lg mx-4 px-2"></i></a>
-                                <a href="#!" class="text-white"><i class="fab fa-google fa-lg"></i></a>
-                            </div>
+                                (click)="submitRegister()">Promeni</button>                         
 
                         </div>
 

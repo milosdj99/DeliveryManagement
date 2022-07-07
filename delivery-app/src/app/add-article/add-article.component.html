@@ -1,5 +1,9 @@
 <div>
-    <button (click)="logOut()">Log out</button>
+    <button style="float: right; background-color:darkslategray; color: white; font-weight: bold;" class="btn btn-lg" (click)="logOut()">Izloguj se</button>
+  </div>
+
+  <div>
+    <button style="float: left; background-color:darkslategray; color: white; font-weight: bold;" class="btn btn-lg" (click)="dashboard()">Nazad na dashboard</button>
   </div>
   
 <section class="vh-100 gradient-custom">
@@ -16,6 +20,13 @@
 
                             <div *ngIf="requiredError" class="alert alert-danger" role="alert">
                                 Niste popunili sva polja!
+                            </div>
+
+                            <div *ngIf="apiError" class="alert alert-danger" role="alert">
+                                Vec postoji artikal sa tim imenom!
+                            </div>
+                            <div *ngIf="numberError" class="alert alert-danger" role="alert">
+                                Cena mora biti veca od 0!
                             </div>
 
                             <div *ngIf="successfulAdd" class="alert alert-success" role="alert">
