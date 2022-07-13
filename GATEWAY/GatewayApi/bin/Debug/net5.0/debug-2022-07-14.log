@@ -1,0 +1,16 @@
+2022-07-14 00:02:25.7696||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2022-07-14 00:02:25.8827||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2022-07-14 00:02:25.9003||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\4_GOD\SEMESTAR 2\WEB 2\Milos_Djukic_PUSGS\DeliveryManagement\GATEWAY\GatewayApi 
+2022-07-14 00:02:25.9378||WARN|Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware|Failed to determine the https port for redirect. 
+2022-07-14 00:02:26.9357||INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request GET http://localhost:31210/swagger/v1/swagger.json 
+2022-07-14 00:02:26.9460||INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request GET http://localhost:31210/swagger/v1/swagger.json 
+2022-07-14 00:02:27.9697||INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 996.113ms - 200 
+2022-07-14 00:02:27.9831||INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 1057.3697ms - 200 
+2022-07-14 00:04:27.5444||INFO|Ocelot.RateLimit.Middleware.ClientRateLimitMiddleware|requestId: 8000000c-0000-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: EndpointRateLimiting is not enabled for /api/users/{everything} 
+2022-07-14 00:04:27.5553||INFO|Ocelot.Authentication.Middleware.AuthenticationMiddleware|requestId: 8000000c-0000-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: No authentication needed for /api/users/facebook-login 
+2022-07-14 00:04:27.5553||INFO|Ocelot.Authorization.Middleware.AuthorizationMiddleware|requestId: 8000000c-0000-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /api/users/{everything} route does not require user to be authorized 
+2022-07-14 00:04:33.3589||INFO|Ocelot.Requester.Middleware.HttpRequesterMiddleware|requestId: 8000000c-0000-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: 200 (OK) status code, request uri: http://localhost:31210/api/users/facebook-login 
+2022-07-14 00:04:33.5653||INFO|Ocelot.RateLimit.Middleware.ClientRateLimitMiddleware|requestId: 8000000e-0000-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: EndpointRateLimiting is not enabled for /api/delivery/{everything} 
+2022-07-14 00:04:33.5968||INFO|Ocelot.Authentication.Middleware.AuthenticationMiddleware|requestId: 8000000e-0000-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: No authentication needed for /api/delivery/articles 
+2022-07-14 00:04:33.5968||INFO|Ocelot.Authorization.Middleware.AuthorizationMiddleware|requestId: 8000000e-0000-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /api/delivery/{everything} route does not require user to be authorized 
+2022-07-14 00:04:38.2215||INFO|Ocelot.Requester.Middleware.HttpRequesterMiddleware|requestId: 8000000e-0000-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: 200 (OK) status code, request uri: http://localhost:23170/api/delivery/articles 

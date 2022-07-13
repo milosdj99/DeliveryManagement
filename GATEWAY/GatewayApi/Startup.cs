@@ -83,6 +83,8 @@ namespace GatewayApi
 
             loggerFactory.AddNLog();
             loggerFactory.ConfigureNLog("nlog.config");
+
+            
             
 
             app.UseOcelot().Wait();

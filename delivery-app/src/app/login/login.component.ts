@@ -32,11 +32,11 @@ export class LoginComponent implements OnInit {
   isSignedin: boolean = false;
 
   ngOnInit(): void {
-    this.socialAuthService.authState.subscribe((user) => {
+      this.socialAuthService.authState.subscribe((user) => {
       this.user = user;
       this.isSignedin = (user != null);
       console.log(this.user);
-    });
+    }); 
   }
 
   facebookLogin(){
@@ -64,6 +64,7 @@ export class LoginComponent implements OnInit {
             let decodedJWT = JSON.parse(window.atob(data.value.split('.')[1]));
             localStorage.setItem('id', decodedJWT.id);
             localStorage.setItem('role', decodedJWT.role);
+            console.log(decodedJWT.role);
     
             this.router.navigateByUrl("dashboard/customer");
           }

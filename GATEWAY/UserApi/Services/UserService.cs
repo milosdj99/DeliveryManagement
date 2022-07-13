@@ -341,7 +341,7 @@ namespace UserApi
             SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokeOptions = new JwtSecurityToken(
-                issuer: "http://localhost:44312",
+                issuer: "http://localhost:31210",
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(20),
                 signingCredentials: signinCredentials

@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace DeliveryApi.Controllers
 {
@@ -106,16 +107,22 @@ namespace DeliveryApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult ConfirmOrder(Guid id, Guid orderId)
         {
-            if (_service.ConfirmOrder(id, orderId))
+            Thread.BeginCriticalRegion();
+
+            string s = _service.ConfirmOrder(id, orderId);
+
+            Thread.EndCriticalRegion();
+
+            if (s == "Ok")
             {
                 return Ok();
             }
             else
             {
-                return BadRequest();
+                return BadRequest(s);
             }
 
-
+            
         }
 
         #endregion

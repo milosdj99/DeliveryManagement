@@ -156,13 +156,21 @@ namespace DeliveryApi.Services
             return orderDto;
         }
 
-        public bool ConfirmOrder(Guid id, Guid orderId)
+        public string ConfirmOrder(Guid id, Guid orderId)
         {
 
-            if (_context.Orders.Where(x => x.DelivererId == id && x.Accepted == true && x.Time > DateTime.Now).FirstOrDefault() != null)
+            if (_context.Orders.Where(x => x.Id == orderId && x.Accepted == true).FirstOrDefault() != null)          //vec je neko prihvatio
             {
-                return false;
+                return "Porudzbina je vec prihvacena od strane drugog dostavljaca!";
             }
+
+
+            if (_context.Orders.Where(x => x.DelivererId == id && x.Accepted == true && x.Time > DateTime.Now).FirstOrDefault() != null) //vec ima porudzbinu
+            {
+                return "Vec postoji porudzbina koju dostavljate!";
+            }
+
+            
 
             _context.Orders.Where(x => x.Id == orderId).FirstOrDefault().DelivererId = id;
 
@@ -174,7 +182,7 @@ namespace DeliveryApi.Services
 
             _context.SaveChanges();
 
-            return true;
+            return "Ok";
         }
 
         #endregion

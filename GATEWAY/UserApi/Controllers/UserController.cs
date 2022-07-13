@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using UserApi.Dto;
 
@@ -103,6 +104,7 @@ namespace UserApi.Controllers
         }
 
         [HttpGet("picture/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetPicture([FromRoute] Guid id)
         {
             TokenModel t = new TokenModel()
@@ -150,8 +152,15 @@ namespace UserApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult ChangeDelivererState([FromRoute] Guid id, [FromRoute] string state)
         {
+            Thread.BeginCriticalRegion();
+
             _service.ChangeState(id, state);
+
+            Thread.EndCriticalRegion();
+
             return Ok();
+
+            
         }
 
 

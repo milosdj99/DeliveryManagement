@@ -160,13 +160,13 @@ export class DashboardCustomerComponent implements OnInit {
             order.time = new Date(order.time);
 
             
-            let helperForSeconds = 0;
+            let helperForSeconds = order.time.getSeconds();
 
             if(order.time.getSeconds < currentTime.getSeconds){
-              helperForSeconds = order.time.getSeconds() + 60;
+              helperForSeconds += 60;
             }
             this.deliveryMinutes = order.time.getMinutes() - currentTime.getMinutes();
-            this.deliverySeconds = order.time.getSeconds() + helperForSeconds - currentTime.getSeconds();
+            this.deliverySeconds = helperForSeconds - currentTime.getSeconds();
 
             this.orders.push(data);
 

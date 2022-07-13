@@ -18,6 +18,8 @@ export class DashboardDelivererComponent implements OnInit {
 
   apiError: boolean = false;
 
+  apiErrorMessage = "";
+
   showTimer: boolean = false;
 
   deliveryMinutes: number = 0;
@@ -48,6 +50,8 @@ export class DashboardDelivererComponent implements OnInit {
       },
       error => {
         this.apiError = true;
+        this.apiErrorMessage = error.error;
+        
       }
     );
     
@@ -81,6 +85,7 @@ export class DashboardDelivererComponent implements OnInit {
     this.api.getCurrentOrderDeliverer().subscribe(
       data => {
         if(data == null){
+          this.showTimer = false;
           return;
         }
             let order : Order = data;
@@ -89,18 +94,36 @@ export class DashboardDelivererComponent implements OnInit {
             order.time = new Date(order.time);
 
             
-            let helperForSeconds = 0;
+            let helperForSeconds = order.time.getSeconds();
 
-            if(order.time.getSeconds < currentTime.getSeconds){
-              helperForSeconds = order.time.getSeconds() + 60;
+            if(helperForSeconds < currentTime.getSeconds()){
+              helperForSeconds += 60;
             }
-            this.deliveryMinutes = order.time.getMinutes() - currentTime.getMinutes();
-            this.deliverySeconds = order.time.getSeconds() + helperForSeconds - currentTime.getSeconds();
+
+            let raspon = (order.time.getMinutes() - currentTime.getMinutes()) * 60 + order.time.getSeconds() - currentTime.getSeconds();
+
+            this.deliveryMinutes = Math.floor(raspon / 60);
+            this.deliverySeconds = raspon % 60;
+
+           /* this.deliveryMinutes = order.time.getMinutes() - currentTime.getMinutes() - 1;
+            this.deliverySeconds = helperForSeconds - currentTime.getSeconds(); */
 
             this.orders.push(data);
 
+            console.clear();
+
+            console.log("orderMinutes: " + order.time.getMinutes());
+            console.log("currentMinutes: " + currentTime.getMinutes());
+
+            console.log("deliveryMinutes: " + this.deliveryMinutes);
+
+            console.log("orderSeconds: " + helperForSeconds);
+            console.log("currentSeconds: " + currentTime.getSeconds());
+
             
-              this.showTimer = true;
+            console.log("deliverySeconds: " + this.deliverySeconds);
+            
+            this.showTimer = true;
             
       }
     );
