@@ -5,6 +5,7 @@ to operate the system, using different functionalities. The application itself r
 2. Gateway API which re-routes client requests towards micorservice APIs
 3. User API which operates with user functionalities
 4. Delivery API which operates with deliveries, articles, orders etc.
+
 Every event on back-end is logged into console and into txt file via NLog. 
 Authorization and autentification are achieved via JWT tokens.
 
